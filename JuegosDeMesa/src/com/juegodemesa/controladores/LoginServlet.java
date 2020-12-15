@@ -29,7 +29,6 @@ public class LoginServlet extends HttpServlet {
 		
 		
 		Usuario usuario = UsuariosDaoMySql.getInstancia().obtenerPorEmail(email);
-		System.out.println("Usuario en funcion del email" + usuario);
 		
 		if(usuario == null) {
 			request.setAttribute("alertamensaje", "El usuario o contraseña son incorrectos");
@@ -57,17 +56,6 @@ public class LoginServlet extends HttpServlet {
 			
 		}
 	
-		
-		
-//		if(email.equals(email) && password.equals(password)) {
-//			request.getSession().setAttribute("email", email);
-//			response.sendRedirect(request.getContextPath() + "/admin/listado");
-//		} else {
-//			request.setAttribute("alertamensaje", "El usuario o contraseña son incorrectos");
-//			request.setAttribute("alertatipo", "danger");
-//			request.setAttribute("email", email);
-//			request.getRequestDispatcher("/WEB-INF/vistas/login.jsp").forward(request, response);
-//		}
 	}
 
 }

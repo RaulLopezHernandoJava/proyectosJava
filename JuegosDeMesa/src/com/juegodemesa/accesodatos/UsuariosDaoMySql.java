@@ -213,6 +213,8 @@ public class UsuariosDaoMySql implements DaoUsuario {
 					usuario = new Usuario (rs.getLong("id"), rs.getString("nombre"), rs.getString("apellidos"),rs.getString("email"),rs.getString("password"),
 							rol,rs.getInt("edad"),rs.getDate("fecha_registro").toLocalDate());
 				}
+				
+				System.out.println(usuario);
 
 				return usuario ;
 			}

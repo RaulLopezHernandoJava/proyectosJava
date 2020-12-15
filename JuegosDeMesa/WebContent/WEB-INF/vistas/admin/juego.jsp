@@ -84,6 +84,17 @@
 					<div class="invalid-feedback">${juego.errorFechaPublicacion}</div>
 				</div>
 			</div>
+			
+			<div class="form-group row">
+				<label for="precio" class="col-m-2 col-form-label">Precio</label>
+				<div class="col-sm-10">
+					<input type="number"
+						class="form-control ${juego.errorPrecio != null ? 'is-invalid' : '' }"
+						id="precio" name="precio"
+						value="${juego.precio}">
+					<div class="invalid-feedback">${juego.}</div>
+				</div>
+			</div>
 
 			<div class="form-group row">
 				<div class="col-sm-10">

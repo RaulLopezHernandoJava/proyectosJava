@@ -7,13 +7,14 @@ public class Juego {
 	
 	private Long id;
 	private String nombre, autor, editorial, imagen;
+	private Double precio;
 	private Mecanica mecanica;
 	private LocalDate fechaPublicacion;
 	
 	
 	private boolean correcto = true;
 	
-	private String errorId, errorNombre, errorAutor, errorEditorial, errorMecanica , errorImagen, errorFechaPublicacion;
+	private String errorId, errorNombre, errorAutor, errorEditorial, errorMecanica , errorPrecio, errorImagen, errorFechaPublicacion;
 	
 	
 	
@@ -22,12 +23,13 @@ public class Juego {
 	
 	// Constructor con todos los argumentos con sus valores que hemos definido previamente
 
-	public Juego(Long id, String nombre, String autor, String editorial, Mecanica mecanica ,String imagen, LocalDate fechaPublicacion) {
+	public Juego(Long id, String nombre, String autor, String editorial, Mecanica mecanica ,Double precio ,String imagen, LocalDate fechaPublicacion) {
 		setId(id);
 		setNombre(nombre);
 		setAutor(autor);
 		setEditorial(editorial);
 		setMecanica(mecanica);
+		setPrecio(precio);
 		setImagen(imagen);
 		setFechaPublicacion(fechaPublicacion);
 		
@@ -35,12 +37,13 @@ public class Juego {
 	
 	// Constructor para construir objetos todo String
 	
-	public Juego(String id, String nombre, String autor, String editorial, Mecanica mecanica ,String imagen, String fechaPublicacion) {
+	public Juego(String id, String nombre, String autor, String editorial, Mecanica mecanica , String precio,String imagen, String fechaPublicacion) {
 		setId(id);
 		setNombre(nombre);
 		setAutor(autor);
 		setEditorial(editorial);
 		setMecanica(mecanica);
+		setPrecio(precio);
 		setImagen(imagen);
 		setFechaPublicacion(fechaPublicacion);
 		
@@ -53,10 +56,6 @@ public class Juego {
 	public Long getId() {
 		return id;
 	}
-
-
-
-
 
 	public void setId(Long id) {
 
@@ -145,15 +144,31 @@ public class Juego {
 		this.mecanica = mecanica;
 	}
 	
-	
-	
 
+
+	public Double getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(Double precio) {
+		this.precio = precio;
+	}
+	
+	public void setPrecio (String precio) {
+		
+		Double juegoPrecio;
+		try {
+			juegoPrecio = precio.length() == 0 ? null : Double.parseDouble(precio);
+			setPrecio(juegoPrecio);
+		} catch (NumberFormatException e) {
+			setErrorId("El precio debe de ser numerio");
+		}
+	}
+	
+	
 	public String getImagen() {
 		return imagen;
 	}
-
-
-
 
 
 	public void setImagen(String imagen) {
@@ -269,6 +284,17 @@ public class Juego {
 	public void setErrorMecanica(String errorMecanica) {
 		correcto = false;
 		this.errorMecanica = errorMecanica;
+		
+	}
+	
+	
+	public String getErrorPrecio() {
+		return errorPrecio;
+	}
+	
+	public void setErrorPrecio(String errorPrecio) {
+		correcto = false;
+		this.errorPrecio = errorPrecio;
 		
 	}
 

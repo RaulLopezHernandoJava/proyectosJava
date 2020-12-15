@@ -29,7 +29,7 @@ public class JuegoGuardarServlet extends HttpServlet {
 		String autor = request.getParameter("autor");
 		String editorial = request.getParameter("editorial");
 		String mecanicaTexto = request.getParameter("mecanica");
-		System.out.println("Esto es mecanica texto " + mecanicaTexto);
+		String precio = request.getParameter("precio");
 		String imagen = request.getParameter("imagen");
 		String fechaPublicacion = request.getParameter("fecha-publicacion");
 
@@ -39,7 +39,7 @@ public class JuegoGuardarServlet extends HttpServlet {
 
 		Mecanica mecanica = Configuracion.daoMecanica.obtenerPorId(mecanicaId);
 
-		Juego juego = new Juego(id, nombre, autor, editorial, mecanica, imagen,
+		Juego juego = new Juego(id, nombre, autor, editorial, mecanica, precio, imagen,
 				fechaPublicacion);
 		Mensaje mensaje = new Mensaje();
 

@@ -24,6 +24,9 @@ public class JuegosServlet extends HttpServlet {
 		String autor = request.getParameter("autor");
 		String editorial = request.getParameter("editorial");
 		String mecanica = request.getParameter("mecanica");
+		String precioMinimo = request.getParameter("min");
+		String precioMaximo = request.getParameter("max");
+		
 
 		if (autor != null && autor.trim().length() > 0) {
 
@@ -33,17 +36,28 @@ public class JuegosServlet extends HttpServlet {
 
 		}
 
-		if (editorial != null) {
+		if (editorial != null && editorial.trim().length() > 0) {
 			request.setAttribute("juegos",Configuracion.dao.filtrarJuegosEditorial(editorial));
 			request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
 
 		}
 		
-		if (mecanica != null) {
-			request.setAttribute("juegos",Configuracion.dao.filtrarJuegosEditorial(editorial));
+		if (mecanica != null && mecanica.trim().length() > 0) {
+			request.setAttribute("juegos",Configuracion.dao.filtrarJuegosMecanica(mecanica));
 			request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
 
 		}
+		
+		if (precioMinimo != null && precioMaximo !=null) {
+			
+			Integer min = Integer.parseInt(precioMinimo);
+			Integer max = Integer.parseInt(precioMaximo);
+			request.setAttribute("juegos",Configuracion.dao.filtrarJuegosPrecio(min, max));
+			request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
+
+		}
+		
+		
 		
 		
 		

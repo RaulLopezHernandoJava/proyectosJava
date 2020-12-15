@@ -46,5 +46,13 @@ public interface Dao<T> {
 	default Iterable<T> filtrarJuegosEditorial(String editorial) {
 		throw new AccesoDatosException(OPERACIÓN_NO_IMPLEMENTADA);
 	}
+	
+	default Iterable<T> filtrarJuegosMecanica(String mecanica) {
+		throw new AccesoDatosException(OPERACIÓN_NO_IMPLEMENTADA);
+	}
+	
+	default Iterable<T> filtrarJuegosPrecio(Integer min, Integer max) {
+		throw new AccesoDatosException(OPERACIÓN_NO_IMPLEMENTADA);
+	}
 }
 

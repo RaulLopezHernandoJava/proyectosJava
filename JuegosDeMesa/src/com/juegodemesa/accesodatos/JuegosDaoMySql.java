@@ -33,6 +33,8 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	private static final String SQL_SELECT_ID = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.id = ?";
 	private static final String SQL_SELECT_AUTOR = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.autor = ?";
 	private static final String SQL_SELECT_EDITORIAL = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.editorial = ?";
+	private static final String SQL_SELECT_MECHANIC = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE m.nombre = ?";
+	private static final String SQL_SELECT_PRICES = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio BETWEEN ? AND ?";
 	private static final String SQL_INSERT = "INSERT INTO juegos (nombre, autor, editorial, id_mecanica, imagen, fecha_publicacion) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String SQL_UPDATE = "UPDATE juegos SET nombre = ?, autor = ?, editorial = ? , id_mecanica = ?, imagen = ? , fecha_publicacion = ? WHERE id = ?";
 	private static final String SQL_DELETE = "DELETE FROM juegos WHERE id = ?";
@@ -71,7 +73,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			while (rs.next()) {
 				mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 				juego = new Juego(rs.getLong("id"), rs.getString("nombre"), rs.getString("autor"),rs.getString("editorial"),
-						mecanica,rs.getString("imagen"),rs.getDate("fecha_publicacion").toLocalDate());
+						mecanica,rs.getDouble("precio"),rs.getString("imagen"),rs.getDate("fecha_publicacion").toLocalDate());
 				juegos.add(juego);
 			}
 			
@@ -104,7 +106,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
 					
 				}
 				System.out.println("Este es el metodo de obtener por Id" + juego);
@@ -214,7 +216,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
 						juegos.add(juego);
 					
 				}
@@ -234,6 +236,8 @@ public class JuegosDaoMySql implements Dao<Juego> {
 		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_EDITORIAL);) {
 			
+			System.out.println("LLego aqui " + editorial);
+			
 			ps.setString(1, editorial);
 			
 			ArrayList<Juego> juegos = new ArrayList<>();
@@ -247,13 +251,11 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
 						juegos.add(juego);
-					
 				}
 				
 				System.out.println("Estos son los juegos filtrados por editorial" + juegos);
-		
 
 				return juegos ;
 			}
@@ -264,8 +266,74 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	}
 	
 	
-	
-	
 	// FILTRAR POR MECANICA
+	
+	
+	public Iterable<Juego> filtrarJuegosMecanica(String mecanicaString) {
+		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_MECHANIC);) {
+			
+			System.out.println("Esta es la mecanica que llega al metodo" + mecanicaString);
+			
+			ps.setString(1, mecanicaString);
+			
+			ArrayList<Juego> juegos = new ArrayList<>();
+			
+			try (ResultSet rs = ps.executeQuery()) {
+
+				Juego juego = null;
+				Mecanica mecanica = null;
+
+				if (rs.next()) {
+					
+						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
+						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+						juegos.add(juego);
+				}
+				
+				System.out.println("Estos son los juegos filtrados por mecanica" + juegos);
+
+				return juegos ;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtener los juegos cuya mecanica es  " + mecanicaString, e);
+		}
+
+	}
+	
+	// FILTRAR POR PRECIO
+	
+	public Iterable<Juego> filtrarJuegosPrecio(Integer min ,Integer max){
+		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_PRICES);) {
+			
+			ps.setInt(1,min);
+			ps.setInt(2,max);
+			
+			ArrayList<Juego> juegos = new ArrayList<>();
+			
+			try (ResultSet rs = ps.executeQuery()) {
+
+				Juego juego = null;
+				Mecanica mecanica = null;
+
+				if (rs.next()) {
+					
+						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
+						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+						juegos.add(juego);
+				}
+				
+				System.out.println("Estos son los juegos filtrados por precio" + juegos);
+
+				return juegos ;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtene los precios de los juegos", e);
+		}
+
+	}
 
 }
