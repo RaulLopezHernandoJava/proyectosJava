@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,7 @@
 <base href="${pageContext.request.contextPath}/" />
 
 <link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="https://kit.fontawesome.com/f7c18cd652.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css" />
 <link rel="stylesheet" href="css/estilos.css" />
 
@@ -32,13 +34,14 @@
 							de juegos</a></li>
 					<li class="nav-item"><a class="nav-link" href="admin/juego">Añadir
 							juego</a></li>
-					<li class="nav-item"><a class="nav-link" href="admin/juego">Buscador Juegos</a></li>
 				</c:if>
 			</ul>
 			<ul class="navbar-nav">
 				<c:choose>
 					<c:when test="${sessionScope.email != null}">
-						<li class="nav-item navbar-text">${email}</li>
+					<li class="nav-item navbar-text"><a class="nav-link" href="admin/listado"><i class="fas fa-shopping-cart"></i></a></li>
+						<li class="nav-item navbar-text"><a class="nav-link" href="admin/listado">${email}
+							</a></li>
 						<li class="nav-item"><a class="nav-link" href="logout">Desconectar</a></li>
 					</c:when>
 					<c:otherwise >
@@ -67,7 +70,7 @@
 		</div>
 
 		<%
-			session.removeAttribute("alertamensaje");
+	    session.removeAttribute("alertamensaje");
 		session.removeAttribute("alertatipo");
 		%>
 	</c:if>

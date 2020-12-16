@@ -114,7 +114,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 		}
 	}
 	
-	//INSERTAR JUEGO
+	//INSERTAR USUARIO
 
 	@Override
 	public void insertar(Usuario usuario) {
@@ -146,7 +146,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 		}
 	}
 	
-	// MODIFICAR JUEGO
+	// MODIFICAR USUARIO
 
 	@Override
 	public void modificar(Usuario usuario) {
@@ -174,7 +174,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 		}
 	}
 
-	// BORRAR JUEGO
+	// BORRAR USUARIO
 	@Override
 	public void borrar(Long id) {
 		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
@@ -198,6 +198,9 @@ public class UsuariosDaoMySql implements DaoUsuario {
 
 	
 	@Override
+	
+	// OBTENER USUARIO A TRAVES DEL EMAIL
+	
 	public Usuario obtenerPorEmail(String email) {
 		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_USER);) {

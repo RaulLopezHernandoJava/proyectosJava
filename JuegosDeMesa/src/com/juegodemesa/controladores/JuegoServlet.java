@@ -20,14 +20,13 @@ public class JuegoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	/**
-	 * Visualización de la pantalla de detalles de la película
+	 * Visualización de la pantalla de detalles del juego
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String sId = request.getParameter("id");
 		
 		if(sId != null) {
 			Long id = Long.parseLong(sId);
-		
 			Juego juego = Configuracion.dao.obtenerPorId(id);
 			System.out.println(juego);
 			

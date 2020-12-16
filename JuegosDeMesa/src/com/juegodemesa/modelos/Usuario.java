@@ -56,15 +56,6 @@ public class Usuario {
 	}
 	
 
-//	public Usuario(String nombre, String apellidos, String email, Rol rol , String edad, String fechaRegistro) {
-//		setNombre(nombre);
-//		setApellidos(apellidos);
-//		setEmail(email);
-//		setRol(rol);
-//		setEdad(edad);
-//		setFechaRegistro(fechaRegistro);
-//	}
-	
 	public Usuario(String nombre, String apellidos, String email, String password,Rol rol ,String edad, String fechaRegistro) {
 		setNombre(nombre);
 		setApellidos(apellidos);
@@ -200,7 +191,7 @@ public class Usuario {
 	}
 
 	public void setFechaRegistro(LocalDate fechaRegistro) {
-		this.fechaRegistro = fechaRegistro;
+		this.fechaRegistro = LocalDate.now();
 	}
 
 	public void setFechaRegistro(String fechaRegistro) {

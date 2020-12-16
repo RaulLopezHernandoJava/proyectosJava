@@ -92,7 +92,7 @@
 						class="form-control ${juego.errorPrecio != null ? 'is-invalid' : '' }"
 						id="precio" name="precio"
 						value="${juego.precio}">
-					<div class="invalid-feedback">${juego.}</div>
+					<div class="invalid-feedback">${juego.precio}</div>
 				</div>
 			</div>
 

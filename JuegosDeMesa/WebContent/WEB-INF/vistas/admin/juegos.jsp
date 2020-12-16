@@ -70,6 +70,16 @@
 							</form>
 						</div>
 					</c:if>
+					
+					<c:if test="${sessionScope.email != 'raullopezhernando@gmail.com'}">
+						<div class="card-body">
+
+							<form class="form-inline" action="admin/juego" method="post">
+								<a class="btn btn-primary" href="user/carritoServlet?id=${juego.id}&userEmail=${sessionScope.email}">Añadir al Carrito</a>
+							</form>
+						</div>
+					</c:if>
+					
 				</div>
 			</c:forEach>
 		</div>

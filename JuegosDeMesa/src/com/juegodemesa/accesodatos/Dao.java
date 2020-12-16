@@ -54,5 +54,6 @@ public interface Dao<T> {
 	default Iterable<T> filtrarJuegosPrecio(Integer min, Integer max) {
 		throw new AccesoDatosException(OPERACIÓN_NO_IMPLEMENTADA);
 	}
+	
 }
 
