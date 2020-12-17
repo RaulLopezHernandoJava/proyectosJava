@@ -3,49 +3,60 @@ package com.juegodemesa.modelos;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Carrito {
+public class Reserva {
 	private Long id;
 	private Integer cantidad;
 	private Double total;
-	private LocalDate fechaCarrito;
+	private LocalDate fecha;
+	private Juego juego;
+	private Usuario usuario;
 	private Long idUsuario;
 	private Long idJuego;
 	
 	private boolean correcto = true;
 
-	private String errorId, errorCantidad, errorTotal, errorFechaCarrito, errorIdUsuario, errorIdJuego;
+	private String errorId, errorCantidad, errorTotal, errorFecha, errorIdUsuario, errorIdJuego;
 	
 	
 	
 	// Constructores
 	
 	
-	public Carrito(Long id, Integer cantidad, Double total, LocalDate fechaCarrito, Long idUsuario, Long idJuego) {
+	public Reserva(Long id, Integer cantidad, Double total, LocalDate fecha, Long idUsuario, Long idJuego) {
 		setId(id);
 		setCantidad(cantidad);
 		setTotal(total);
-		setFechaCarrito(fechaCarrito);
+		setFecha(fecha);
 		setIdUsuario(idUsuario);
 		setIdJuego(idJuego);
 	}
 	
 	
-	public Carrito(String id, String cantidad, String total, String fechaCarrito, String idUsuario, String idJuego) {
+	public Reserva(String id, String cantidad, String total, String fechaCarrito, String idUsuario, String idJuego) {
 		setId(id);
 		setCantidad(cantidad);
 		setTotal(total);
-		setFechaCarrito(fechaCarrito);
+		setFecha(fechaCarrito);
 		setIdUsuario(idUsuario);
 		setIdJuego(idJuego);
 		
 	}
 	
-	public Carrito() {};
+	public Reserva() {};
 	
 	
+
+	public Reserva(long id, Usuario usuario, Juego juego, int cantidad, double total) {
+		setId(id);
+		setUsuario(usuario);
+		setJuego(juego);
+		setCantidad(cantidad);
+		setTotal(total);
+		
+	}
 	
 	// Getters and Setters del objeto Carrito
-	
+
 
 	public Long getId() {
 		return id;
@@ -104,22 +115,41 @@ public class Carrito {
 		}
 	}
 
-	public LocalDate getFechaCarrito() {
-		return fechaCarrito;
+	public LocalDate getFecha() {
+		return fecha;
 	}
 
-	public void setFechaCarrito(LocalDate fechaCarrito) {
-		this.fechaCarrito = fechaCarrito;
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
 	}
 	
-	public void setFechaCarrito(String fechaCarrito) {
+	public void setFecha(String fecha) {
 		LocalDate juegoFechaCarrito;
 		try {
-			juegoFechaCarrito = LocalDate.parse(fechaCarrito, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-			setFechaCarrito(juegoFechaCarrito);
+			juegoFechaCarrito = LocalDate.parse(fecha, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			setFecha(juegoFechaCarrito);
 		} catch (Exception e) {
-			setErrorFechaCarrito("La fecha debe tener un formato 1234-12-12");
+			setErrorFecha("La fecha debe tener un formato 1234-12-12");
 		}
+	}
+	
+	public Juego getJuego() {
+		return juego;
+	}
+
+
+	public void setJuego(Juego juego) {
+		this.juego = juego;
+	}
+
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public Long getIdUsuario() {
@@ -202,13 +232,13 @@ public class Carrito {
 	}
 
 
-	public String getErrorFechaCarrito() {
-		return errorFechaCarrito;
+	public String getErrorFecha() {
+		return errorFecha;
 	}
 
 
-	public void setErrorFechaCarrito(String errorFechaCarrito) {
-		this.errorFechaCarrito = errorFechaCarrito;
+	public void setErrorFecha(String errorFecha) {
+		this.errorFecha = errorFecha;
 	}
 
 

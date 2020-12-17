@@ -47,7 +47,7 @@ public class Usuario {
 	
 	
 
-	public Usuario( String nombre, String apellidos, String email, String rol, String edad, String fechaRegistro) {
+	public Usuario(String nombre, String apellidos, String email, String rol, String edad, String fechaRegistro) {
 		setNombre(nombre);
 		setApellidos(apellidos);
 		setEmail(email);
@@ -64,6 +64,12 @@ public class Usuario {
 		setRol(rol);
 		setEdad(edad);
 		setFechaRegistro(fechaRegistro);
+	}
+	
+	public Usuario(String nombre, String apellidos,String email) {
+		setNombre(nombre);
+		setApellidos(apellidos);
+		setEmail(email);
 	}
 	
 

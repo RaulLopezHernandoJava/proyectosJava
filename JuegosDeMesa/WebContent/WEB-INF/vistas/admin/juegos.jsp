@@ -19,12 +19,13 @@
 						placeholder="Inserte una editorial..." id="editorial">
 				</div>
 				<div class="mb-3">
-				
-					<label for="mecanica">Mecanicas</label>
-					 <select class="form-control" name="mecanica">
+
+					<label for="mecanica">Mecanicas</label> <select
+						class="form-control" name="mecanica">
 						<option value="">Elige una mecanica</option>
 						<option value="Roll and Write">Roll and Write</option>
-						<option value="Colocacion de Trabajadores">Colocacion de Trabajadores</option>
+						<option value="Colocacion de Trabajadores">Colocacion de
+							Trabajadores</option>
 					</select>
 				</div>
 				<div class="mb-3">
@@ -70,16 +71,34 @@
 							</form>
 						</div>
 					</c:if>
-					
+
 					<c:if test="${sessionScope.email != 'raullopezhernando@gmail.com'}">
 						<div class="card-body">
 
-							<form class="form-inline" action="admin/juego" method="post">
-								<a class="btn btn-primary" href="user/carritoServlet?id=${juego.id}&userEmail=${sessionScope.email}">Añadir al Carrito</a>
-							</form>
+							<form class="form-inline" action="user/reservaServlet" method="post">
+								<label for="copia">Numero Copias</label>
+								 <select
+									class="form-control" name="copia" id ="copia">
+									<option value="1"selected>1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									
+								
+								</select>
+								<input type="hidden" name="id" value="${juego.id}">
+								<button type="submit" class="btn btn-primary">Añadir al Carrito</button>
+						</form>
+								 		
 						</div>
 					</c:if>
-					
+
 				</div>
 			</c:forEach>
 		</div>

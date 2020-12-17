@@ -50,8 +50,13 @@ public class Juego {
 	}
 
 
+	public Juego(String nombre, int precio) {
+		setNombre(nombre);
+		setPrecio(precio);
 
-
+	}
+	
+	
 
 	public Long getId() {
 		return id;
@@ -152,6 +157,18 @@ public class Juego {
 
 	public void setPrecio(Double precio) {
 		this.precio = precio;
+	}
+	
+
+	public void setPrecio(int precio) {
+		
+		Double juegoPrecio;
+		try {
+			juegoPrecio =  Double.valueOf(precio);
+			setPrecio(juegoPrecio);
+		} catch (NumberFormatException e) {
+			setErrorId("El precio debe de ser numerio");
+		}
 	}
 	
 	public void setPrecio (String precio) {
