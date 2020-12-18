@@ -8,17 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/user/reservasCarrito")
-public class ReservasCarritoServlet extends HttpServlet {
+public class ObtenerReservasServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public ReservasCarritoServlet() {
-        super();
+    public ObtenerReservasServlet() {
     }
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String emailUser = request.getSession().getAttribute("email").toString();
+		
+		if(emailUser == "raullopezhernando@gmail.com") {
 		request.setAttribute("reservas", Configuracion.daoReserva.obtenerTodos());
 		request.getRequestDispatcher("/WEB-INF/vistas/usuario/carrito.jsp").forward(request, response);
+		}
+		
+		if(emailUser != "raullopezhernando@gmail.com") {
+			request.setAttribute("reservas", Configuracion.daoReserva.obtenerReservasPorEmail(emailUser));
+			request.getRequestDispatcher("/WEB-INF/vistas/usuario/carrito.jsp").forward(request, response);
+		}
 	}
 
 

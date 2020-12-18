@@ -15,6 +15,7 @@ import java.util.Date;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mecanica;
 import com.juegodemesa.modelos.Reserva;
+import com.juegodemesa.modelos.Rol;
 import com.juegodemesa.modelos.Usuario;
 
 public class ReservasDaoMySql implements DaoReserva {
@@ -38,13 +39,13 @@ public class ReservasDaoMySql implements DaoReserva {
 		
 		// Ejemplos de Select . HAY QUE MODIFICAR
 		
-		private static final String SQL_SELECT = "SELECT r.id,u.nombre,u.apellidos,u.email,j.nombre,j.precio,r.cantidad,r.total FROM reservas r JOIN usuarios u ON u.id = r.idUsuario JOIN juegos j ON j.id = r.idJuego";
-//		private static final String SQL_SELECT_ID = "SELECT * FROM usuarios j JOIN roles r ON u.id_rol = r.id WHERE u.id = ?";
+		private static final String SQL_SELECT = "SELECT r.id,u.nombre,u.apellidos,u.email,j.nombre,j.precio,j.imagen,r.cantidad,r.total FROM reservas r JOIN usuarios u ON u.id = r.idUsuario JOIN juegos j ON j.id = r.idJuego";
+		private static final String SQL_SELECT_EMAIL = "SELECT r.id,u.nombre,u.apellidos,u.email,j.nombre,j.precio,j.imagen,r.cantidad,r.total FROM reservas r JOIN usuarios u ON u.id = r.idUsuario JOIN juegos j ON j.id = r.idJuego where u.email=?";
 //		private static final String SQL_SELECT_USER = "SELECT * FROM usuarios u WHERE u.email = ?";
 //		private static final String SQL_SELECT_PASSWORD = "SELECT u.password FROM usuarios u WHERE u.email = ?";
 		private static final String SQL_INSERT = "INSERT INTO reservas (cantidad,total,idUsuario,idJuego,fecha) VALUES (?, ?, ?, ?, ?)";
 //		private static final String SQL_UPDATE = "UPDATE usuarios SET nombre = ?, apellidos = ?, email= ? , id_rol = ? , edad = ? , fechaRegistro = ? WHERE id = ?";
-//		private static final String SQL_DELETE = "DELETE FROM usuarios WHERE id = ?";
+		private static final String SQL_DELETE_RESERVA = "DELETE FROM reservas WHERE id = ?";
 		
 	
 
@@ -56,7 +57,7 @@ public class ReservasDaoMySql implements DaoReserva {
 					Statement s = con.createStatement();
 					ResultSet rs = s.executeQuery(SQL_SELECT);) {
 				ArrayList<Reserva> reservas = new ArrayList<>();
-				System.out.println("Estas son las reservas" + reservas);
+				System.out.println("Estas son todas las reservas de los usuarios" + reservas);
 				
 				Usuario usuario;
 				Reserva reserva;
@@ -66,8 +67,8 @@ public class ReservasDaoMySql implements DaoReserva {
 				// colección
 				while (rs.next()) {
 					usuario = new Usuario(rs.getString("u.nombre"),rs.getString("u.apellidos"),rs.getString("u.email"));
-					juego = new Juego(rs.getString("j.nombre"), rs.getInt("j.precio"));
-					reserva = new Reserva(rs.getLong("id"), usuario, juego,rs.getInt("cantidad"),rs.getDouble("total"));
+					juego = new Juego(rs.getString("j.nombre"), rs.getInt("j.precio"),rs.getString("j.imagen"));
+					reserva = new Reserva(rs.getLong("id"), usuario, juego,rs.getInt("r.cantidad"),rs.getDouble("r.total"),rs.getBoolean("r.active"));
 					reservas.add(reserva);
 				}
 				
@@ -75,14 +76,37 @@ public class ReservasDaoMySql implements DaoReserva {
 
 				return reservas;
 			} catch (SQLException e) {
-				throw new AccesoDatosException("Ha habido un problema al obtener todos los registros de juegso", e);
+				throw new AccesoDatosException("Ha habido un problema al obtener todos las reservas de los juegos", e);
 			}
 
 		}
 
 		@Override
-		public Reserva obtenerporId(int idCarrito) {
-			return null;
+		public Iterable<Reserva> obtenerReservasPorEmail(String email) {
+			
+			try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+					PreparedStatement ps = con.prepareStatement(SQL_SELECT_EMAIL);) {
+				ArrayList<Reserva> reservas = new ArrayList<>();
+				ps.setString(1, email);
+
+				try (ResultSet rs = ps.executeQuery()) {
+
+					Usuario usuario = null;
+					Reserva reserva = null;
+					Juego juego = null;
+
+					while (rs.next()) {
+						usuario = new Usuario(rs.getString("u.nombre"),rs.getString("u.apellidos"),rs.getString("u.email"));
+						juego = new Juego(rs.getString("j.nombre"), rs.getInt("j.precio"),rs.getString("j.imagen"));
+						reserva = new Reserva(rs.getLong("id"), usuario, juego,rs.getInt("r.cantidad"),rs.getDouble("r.total"),rs.getBoolean("active"));
+						reservas.add(reserva);
+					}
+
+					return reservas ;
+				}
+			} catch (SQLException e) {
+				throw new AccesoDatosException("Ha habido un problema al obtner las reservas del usuario " + email, e);
+			}
 		}
 		@Override
 		public void insertarReserva(Usuario usuario, Juego juego, String copias) {
@@ -128,8 +152,23 @@ public class ReservasDaoMySql implements DaoReserva {
 			
 		}
 		@Override
-		public void borrarReserva(int idCarrito) {
-			// TODO Auto-generated method stub
+		public void borrarReserva(Long idReserva) {
+			try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+					PreparedStatement ps = con.prepareStatement(SQL_DELETE_RESERVA);) {
+
+				ps.setLong(1, idReserva);
+
+				int numeroRegistrosBorrados = ps.executeUpdate();
+				
+				if(numeroRegistrosBorrados == 0) {
+					throw new AccesoDatosException("Se ha intentado borrar una reserva inexistente");
+				} else if(numeroRegistrosBorrados > 1) {
+					throw new AccesoDatosException("SE HA BORRADO MÁS DE UNA RESERVA");
+				}
+
+			} catch (SQLException e) {
+				throw new AccesoDatosException("Ha habido un problema al obtner la reserva cuyo id es " + idReserva, e);
+			}
 			
 		}
 	

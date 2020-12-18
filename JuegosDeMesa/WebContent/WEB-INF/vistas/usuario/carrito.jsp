@@ -2,8 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/vistas/includes/cabecera.jsp"%>
 
-<table class="table table-striped table-bordered table-hover table-sm">
-	<thead class="thead-dark">
+<table class="table table-striped table-bordered table-hover table-sm mt-6">
+	<thead class="thead-dark ">
 		<tr>
 			<th>Id</th>
 			<th>Nombre</th>
@@ -11,9 +11,10 @@
 			<th>Email</th>
 			<th>Juego</th>
 			<th>Precio</th>
+			<th>Imagen Juego</th>
 			<th>Nº Juegos Pedidos</th>
 			<th>Total Reserva</th>
-			<th>
+			<th>Opciones</th>
 		</tr>
 	</thead>
 	<!-- Imprimimos los datos que nos interesen del carrito -->
@@ -26,6 +27,7 @@
 				<td>${reserva.usuario.email}</td>
 				<td>${reserva.juego.nombre}</td>
 				<td>${reserva.juego.precio}</td>
+				<td> <img src="${reserva.juego.imagen}" alt="imagenJuego" width="200" height="200"> </td> 
 				<td>${reserva.cantidad}</td>
 				<td>${reserva.total}</td>
 				<td>
@@ -33,7 +35,7 @@
 <%-- 						<a class="btn btn-primary" href="admin/pelicula?id=${pelicula.id}">Editar</a> --%>
 
 						<a class="btn btn-danger"
-							onclick="return confirm('¿Estás seguro?')" href="admin/borrar?id=${pelicula.id}">Borrar Juego</a>
+							onclick="return confirm('¿Estás seguro de querer eliminar esta Reserva?')" href="user/BorrarReserva?id=${reserva.id}">Eliminar Reserva</a>
 
 					</form>
 				</td>

@@ -10,11 +10,12 @@ public class Juego {
 	private Double precio;
 	private Mecanica mecanica;
 	private LocalDate fechaPublicacion;
+	private Boolean active;
 	
 	
 	private boolean correcto = true;
 	
-	private String errorId, errorNombre, errorAutor, errorEditorial, errorMecanica , errorPrecio, errorImagen, errorFechaPublicacion;
+	private String errorId, errorNombre, errorAutor, errorEditorial, errorMecanica , errorPrecio, errorImagen, errorFechaPublicacion,errorActive;
 	
 	
 	
@@ -23,7 +24,9 @@ public class Juego {
 	
 	// Constructor con todos los argumentos con sus valores que hemos definido previamente
 
-	public Juego(Long id, String nombre, String autor, String editorial, Mecanica mecanica ,Double precio ,String imagen, LocalDate fechaPublicacion) {
+	public Juego(Long id, String nombre, String autor, String editorial, Mecanica mecanica 
+			,Double precio ,String imagen, LocalDate fechaPublicacion,Boolean active) {
+		
 		setId(id);
 		setNombre(nombre);
 		setAutor(autor);
@@ -32,6 +35,7 @@ public class Juego {
 		setPrecio(precio);
 		setImagen(imagen);
 		setFechaPublicacion(fechaPublicacion);
+		setActive(active);
 		
 	}
 	
@@ -50,9 +54,10 @@ public class Juego {
 	}
 
 
-	public Juego(String nombre, int precio) {
+	public Juego(String nombre, int precio,String imagen) {
 		setNombre(nombre);
 		setPrecio(precio);
+		setImagen(imagen);
 
 	}
 	
@@ -215,16 +220,20 @@ public class Juego {
 		}
 	}
 	
-	
+	public Boolean getActive() {
+		return active;
+	}
 
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
+	
+	
 
 	public boolean isCorrecto() {
 		return correcto;
 	}
-
-
-
-
 
 	public void setCorrecto(boolean correcto) {
 		this.correcto = correcto;
@@ -320,9 +329,6 @@ public class Juego {
 	}
 
 
-
-
-
 	public void setErrorImagen(String errorImagen) {
 		correcto = false;
 		this.errorImagen = errorImagen;
@@ -340,11 +346,16 @@ public class Juego {
 		this.errorFechaPublicacion = errorFechaPublicacion;
 	}
 
+	public String getErrorActive() {
+		return errorActive;
+	}
 
+	public void setErrorActive(String errorActive) {
+		this.errorActive = errorActive;
+	}
+	
 	
 
-
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

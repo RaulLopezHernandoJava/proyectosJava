@@ -73,7 +73,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			while (rs.next()) {
 				mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 				juego = new Juego(rs.getLong("id"), rs.getString("nombre"), rs.getString("autor"),rs.getString("editorial"),
-						mecanica,rs.getDouble("precio"),rs.getString("imagen"),rs.getDate("fecha_publicacion").toLocalDate());
+						mecanica,rs.getDouble("precio"),rs.getString("imagen"),rs.getDate("fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
 				juegos.add(juego);
 			}
 			
@@ -106,7 +106,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
 					
 				}
 				System.out.println("Este es el metodo de obtener por Id" + juego);
@@ -216,7 +216,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
 						juegos.add(juego);
 					
 				}
@@ -251,7 +251,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
 						juegos.add(juego);
 				}
 				
@@ -288,7 +288,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
 						juegos.add(juego);
 				}
 				
@@ -322,7 +322,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					
 						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate());
+								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
 						juegos.add(juego);
 				}
 				

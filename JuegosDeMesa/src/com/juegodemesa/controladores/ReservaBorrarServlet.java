@@ -1,7 +1,6 @@
 package com.juegodemesa.controladores;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,25 +10,30 @@ import javax.servlet.http.HttpSession;
 
 import com.juegodemesa.accesodatos.AccesoDatosException;
 
-@WebServlet("/admin/borrar")
-public class JuegoBorrarServlet extends HttpServlet {
+@WebServlet("/user/BorrarReserva")
+public class ReservaBorrarServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
+    public ReservaBorrarServlet() {
+    }
+
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sId = request.getParameter("id");
 		
+	String sId = request.getParameter("id");
+	System.out.println("Recojo el parametro para borrar" + sId);
 		
-		Long id = Long.parseLong(sId);
+		Long idReserva = Long.parseLong(sId);
 		
 		String alertaMensaje, alertaTipo;
 		
 		try {
-			Configuracion.dao.borrar(id);
+			Configuracion.daoReserva.borrarReserva(idReserva);
 			
-			alertaMensaje = "Registro " + id + " borrado correctamente";
+			alertaMensaje = "Reserva" + idReserva + " borrada correctamente";
 			alertaTipo = "success";
 		} catch (AccesoDatosException e) {
-			alertaMensaje = "El registro a borrar no existe";
+			alertaMensaje = "La reserva  a borrar no existe";
 			alertaTipo = "warning";
 		}
 		
@@ -38,7 +42,7 @@ public class JuegoBorrarServlet extends HttpServlet {
 		session.setAttribute("alertatipo", alertaTipo);
 		session.setAttribute("alertamensaje", alertaMensaje);
 		
-		response.sendRedirect(request.getContextPath() + "/admin/listado");
+		response.sendRedirect(request.getContextPath() + "/user/reservasCarrito");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

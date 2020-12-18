@@ -12,23 +12,25 @@ public class Reserva {
 	private Usuario usuario;
 	private Long idUsuario;
 	private Long idJuego;
+	private Boolean active;
 	
 	private boolean correcto = true;
 
-	private String errorId, errorCantidad, errorTotal, errorFecha, errorIdUsuario, errorIdJuego;
+	private String errorId, errorCantidad, errorTotal, errorFecha, errorIdUsuario, errorIdJuego,errorActive;
 	
 	
 	
 	// Constructores
 	
 	
-	public Reserva(Long id, Integer cantidad, Double total, LocalDate fecha, Long idUsuario, Long idJuego) {
+	public Reserva(Long id, Integer cantidad, Double total, LocalDate fecha, Long idUsuario, Long idJuego,Boolean active) {
 		setId(id);
 		setCantidad(cantidad);
 		setTotal(total);
 		setFecha(fecha);
 		setIdUsuario(idUsuario);
 		setIdJuego(idJuego);
+		setActive(active);
 	}
 	
 	
@@ -46,13 +48,13 @@ public class Reserva {
 	
 	
 
-	public Reserva(long id, Usuario usuario, Juego juego, int cantidad, double total) {
+	public Reserva(long id, Usuario usuario, Juego juego, int cantidad, double total, boolean active) {
 		setId(id);
 		setUsuario(usuario);
 		setJuego(juego);
 		setCantidad(cantidad);
 		setTotal(total);
-		
+		setActive(active);
 	}
 	
 	// Getters and Setters del objeto Carrito
@@ -188,9 +190,19 @@ public class Reserva {
 		}
 	}
 	
+	public Boolean getActive() {
+		return active;
+	}
+
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
+	
+	
 	
 	// Getters and Setters de los Errores
-
 
 	public boolean isCorrecto() {
 		return correcto;
@@ -260,6 +272,18 @@ public class Reserva {
 	public void setErrorIdJuego(String errorIdJuego) {
 		this.errorIdJuego = errorIdJuego;
 	}
+
+
+	public String getErrorActive() {
+		return errorActive;
+	}
+
+
+	public void setErrorActive(String errorActive) {
+		this.errorActive = errorActive;
+	}
+	
+	
 	
 
 }
