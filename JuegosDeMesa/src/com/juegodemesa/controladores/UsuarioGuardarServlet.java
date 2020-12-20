@@ -20,7 +20,7 @@ import com.juegodemesa.modelos.Usuario;
 /**
  * Servlet implementation class UsuarioGuardarServlet
  */
-@WebServlet("/UsuarioGuardarServlet")
+@WebServlet("/user/guardar")
 public class UsuarioGuardarServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

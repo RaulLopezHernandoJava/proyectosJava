@@ -10,7 +10,8 @@
 <base href="${pageContext.request.contextPath}/" />
 
 <link rel="stylesheet" href="css/bootstrap.min.css" />
-<script src="https://kit.fontawesome.com/f7c18cd652.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/f7c18cd652.js"
+	crossorigin="anonymous"></script>
 <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css" />
 <link rel="stylesheet" href="css/estilos.css" />
 
@@ -39,12 +40,20 @@
 			<ul class="navbar-nav">
 				<c:choose>
 					<c:when test="${sessionScope.email != null}">
-					<li class="nav-item navbar-text"><a class="nav-link" href="admin/listado"><i class="fas fa-shopping-cart"></i></a></li>
-						<li class="nav-item navbar-text"><a class="nav-link" href="admin/listado">${email}
-							</a></li>
-						<li class="nav-item"><a class="nav-link" href="logout">Desconectar</a></li>
+						<li class="nav-item dropdown"><a
+							class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+							role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Mi Cuenta - ${email} </a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" href="user/datosUsuario">Datos Usuario</a></li>
+								<li><a class="dropdown-item" href="#">Direccion Envio</a></li>
+								<li><a class="dropdown-item" href="#">Pedidos</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="logout">Salir</a></li>
+							</ul></li>
+						
 					</c:when>
-					<c:otherwise >
+					<c:otherwise>
 						<li class="nav-item"><a class="nav-link" href="login">Login</a></li>
 					</c:otherwise>
 				</c:choose>
@@ -70,7 +79,7 @@
 		</div>
 
 		<%
-	    session.removeAttribute("alertamensaje");
+			session.removeAttribute("alertamensaje");
 		session.removeAttribute("alertatipo");
 		%>
 	</c:if>

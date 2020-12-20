@@ -39,13 +39,13 @@ public class ReservasDaoMySql implements DaoReserva {
 		
 		// Ejemplos de Select . HAY QUE MODIFICAR
 		
-		private static final String SQL_SELECT = "SELECT r.id,u.nombre,u.apellidos,u.email,j.nombre,j.precio,j.imagen,r.cantidad,r.total FROM reservas r JOIN usuarios u ON u.id = r.idUsuario JOIN juegos j ON j.id = r.idJuego";
+		private static final String SQL_SELECT = "SELECT r.id,u.nombre,u.apellidos,u.email,j.nombre,j.precio,j.imagen,r.cantidad,r.total FROM reservas r JOIN usuarios u ON u.id = r.idUsuario JOIN juegos j ON j.id = r.idJuego WHERE r.active =TRUE";
 		private static final String SQL_SELECT_EMAIL = "SELECT r.id,u.nombre,u.apellidos,u.email,j.nombre,j.precio,j.imagen,r.cantidad,r.total FROM reservas r JOIN usuarios u ON u.id = r.idUsuario JOIN juegos j ON j.id = r.idJuego where u.email=?";
 //		private static final String SQL_SELECT_USER = "SELECT * FROM usuarios u WHERE u.email = ?";
 //		private static final String SQL_SELECT_PASSWORD = "SELECT u.password FROM usuarios u WHERE u.email = ?";
 		private static final String SQL_INSERT = "INSERT INTO reservas (cantidad,total,idUsuario,idJuego,fecha) VALUES (?, ?, ?, ?, ?)";
 //		private static final String SQL_UPDATE = "UPDATE usuarios SET nombre = ?, apellidos = ?, email= ? , id_rol = ? , edad = ? , fechaRegistro = ? WHERE id = ?";
-		private static final String SQL_DELETE_RESERVA = "DELETE FROM reservas WHERE id = ?";
+		private static final String SQL_DELETE_RESERVA = "UPDATE reservas r SET active = FALSE where r.id = ?";
 		
 	
 

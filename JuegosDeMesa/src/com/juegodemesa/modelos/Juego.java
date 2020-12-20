@@ -351,6 +351,7 @@ public class Juego {
 	}
 
 	public void setErrorActive(String errorActive) {
+		correcto = false;
 		this.errorActive = errorActive;
 	}
 	

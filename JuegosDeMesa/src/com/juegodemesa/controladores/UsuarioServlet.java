@@ -9,14 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.juegodemesa.accesodatos.UsuariosDaoMySql;
 import com.juegodemesa.controladores.*;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Usuario;
 
-@WebServlet("/registro")
-/**
- * Servlet para el mantenimiento de una juego, facilitando las operaciones CRUD básicas
- */
+@WebServlet("/user/datosUsuario")
+
 public class UsuarioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -24,12 +23,12 @@ public class UsuarioServlet extends HttpServlet {
 	 * Visualización de la pantalla de detalles del usuario
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sId = request.getParameter("id");
 		
-		if(sId != null) {
-			Long id = Long.parseLong(sId);
+		String email  = request.getSession().getAttribute("email").toString();
 		
-			Usuario usuario = Configuracion.daoUsuario.obtenerPorId(id);
+		if(email != null) {
+		
+			Usuario usuario = UsuariosDaoMySql.getInstancia().obtenerPorEmail(email);
 			
 			request.setAttribute("usuario", usuario);
 		}

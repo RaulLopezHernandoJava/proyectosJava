@@ -15,13 +15,14 @@
 					<div class="invalid-feedback">${pelicula.errorId}</div>
 				</div>
 			</div> --%>
+			<h1 class="m-2">Perfil del Usuario </h1>
 			<div class="form-group row">
 				<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 				<div class="col-sm-10">
 					<input type="text"
 						class="form-control ${pelicula.errorNombre != null ? 'is-invalid' : '' }"
-						id="nombre" name="nombre" placeholder="Inserte su nombre"
-						value="${usuario.nombre}">
+						id="nombre" name="nombre" placeholder="Inserte su nombre" readonly
+						value="${usuario.nombre} ">
 					<div class="invalid-feedback">${usuario.errorNombre}</div>
 				</div>
 			</div>
@@ -32,7 +33,7 @@
 					<input type="text"
 						class="form-control ${usuario.errorApellidos != null ? 'is-invalid' : '' }"
 						id="apellidos" name="apellidos"
-						placeholder="Inserte sus apellidos" value="${usuario.apellidos}">
+						placeholder="Inserte sus apellidos" readonly value="${usuario.apellidos}">
 					<div class="invalid-feedback">${usuario.errorApellidos}</div>
 				</div>
 			</div>
@@ -42,7 +43,7 @@
 				<div class="col-sm-10">
 					<input type="text"
 						class="form-control ${usuario.errorEmail != null ? 'is-invalid' : '' }"
-						id="email" name="email" placeholder="Inserte su email"
+						id="email" name="email" readonly placeholder="Inserte su email"
 						value="${usuario.email}">
 					<div class="invalid-feedback">${usuario.errorEmail}</div>
 				</div>
@@ -53,7 +54,7 @@
 				<div class="col-sm-10">
 					<input type="password"
 						class="form-control ${usuario.errorPassword != null ? 'is-invalid' : '' }"
-						id="password" name="password" placeholder="Inserte su contraseña"
+						id="password" name="password" readonly placeholder="Inserte su contraseña"
 						value="${usuario.password}">
 					<div class="invalid-feedback">${usuario.errorPassword}</div>
 				</div>
@@ -64,7 +65,7 @@
 				<div class="col-sm-10">
 					<input type="number"
 						class="form-control ${usuario.errorEdad != null ? 'is-invalid' : '' }"
-						id="edad" name="edad" placeholder="Inserte su edad ( Opcional )"
+						id="edad" name="edad" readonly placeholder="Inserte su edad ( Opcional )"
 						value="${usuario.edad}">
 					<div class="invalid-feedback">${usuario.errorEdad}</div>
 				</div>
@@ -76,7 +77,7 @@
 				<div class="col-sm-10">
 					<input type="date"
 						class="form-control ${juego.errorFechaRegistro != null ? 'is-invalid' : '' }"
-						id="fecha-registro" name="fecha-registro"
+						id="fecha-registro" name="fecha-registro" readonly
 						value="${usuario.fechaRegistro}">
 					<div class="invalid-feedback">${juego.errorFechaRegistro}</div>
 				</div>
@@ -84,8 +85,7 @@
 
 			<div class="form-group row">
 				<div class="col-sm-10">
-					<button type="submit" class="btn btn-primary">Aceptar</button>
-					<a class="btn btn-danger" href="admin/listado">Cancelar</a>
+					<a class="btn btn-primary" href="admin/listado">Pagina Principal</a>
 				</div>
 			</div>
 		</form>

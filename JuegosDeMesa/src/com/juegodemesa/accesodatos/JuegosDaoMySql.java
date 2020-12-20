@@ -29,15 +29,15 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	private static final String USER = "debian-sys-maint";
 	private static final String PASS = "o8lAkaNtX91xMUcV";
 
-	private static final String SQL_SELECT = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id";
-	private static final String SQL_SELECT_ID = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.id = ?";
-	private static final String SQL_SELECT_AUTOR = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.autor = ?";
-	private static final String SQL_SELECT_EDITORIAL = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.editorial = ?";
-	private static final String SQL_SELECT_MECHANIC = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE m.nombre = ?";
-	private static final String SQL_SELECT_PRICES = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio BETWEEN ? AND ?";
+	private static final String SQL_SELECT = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.active = TRUE";
+	private static final String SQL_SELECT_ID = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.id = ? WHERE j.active=TRUE ";
+	private static final String SQL_SELECT_AUTOR = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.autor = ? WHERE j.active=TRUE";
+	private static final String SQL_SELECT_EDITORIAL = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.editorial = ? WHERE j.active=TRUE";
+	private static final String SQL_SELECT_MECHANIC = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE m.nombre = ? WHERE j.active = TRUE";
+	private static final String SQL_SELECT_PRICES = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio BETWEEN ? AND ? WHERE j.active = TRUE";
 	private static final String SQL_INSERT = "INSERT INTO juegos (nombre, autor, editorial, id_mecanica, imagen, fecha_publicacion) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String SQL_UPDATE = "UPDATE juegos SET nombre = ?, autor = ?, editorial = ? , id_mecanica = ?, imagen = ? , fecha_publicacion = ? WHERE id = ?";
-	private static final String SQL_DELETE = "DELETE FROM juegos WHERE id = ?";
+	private static final String SQL_DELETE = "UPDATE juegos r SET active = FALSE where j.id = ?";
 
 	// EJEMPLO DE INYECCIÓN DE SQL
 	// fecha_estreno = "2000-1-1'); DROP TABLE peliculas;--
