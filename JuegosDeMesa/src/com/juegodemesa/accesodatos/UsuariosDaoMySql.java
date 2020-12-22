@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.juegodemesa.controladores.Configuracion;
+import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mecanica;
 import com.juegodemesa.modelos.Rol;
 import com.juegodemesa.modelos.Usuario;
@@ -34,7 +35,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 
 	private static final String SQL_SELECT = "SELECT * FROM usuarios u JOIN roles r ON u.id_rol = r.id";
 	private static final String SQL_SELECT_ID = "SELECT * FROM usuarios j JOIN roles r ON u.id_rol = r.id WHERE u.id = ?";
-	private static final String SQL_SELECT_USER = "SELECT * FROM usuarios u WHERE u.email = ?";
+	private static final String SQL_SELECT_USER = "SELECT * FROM usuarios u JOIN roles r ON u.id = r.id WHERE u.email = ?";
 	private static final String SQL_SELECT_PASSWORD = "SELECT u.password FROM usuarios u WHERE u.email = ?";
 	private static final String SQL_INSERT = "INSERT INTO usuarios (nombre, apellidos, email, id_rol , password,  edad , fecha_registro ) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_UPDATE = "UPDATE usuarios SET nombre = ?, apellidos = ?, email= ? , id_rol = ? , edad = ? , fechaRegistro = ? WHERE id = ?";
@@ -86,7 +87,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 
 	}
 	
-	// OBTENER UN JUEGO
+	// OBTENER UN USUARIO
 
 	@Override
 	public Usuario obtenerPorId(Long id) {
@@ -213,8 +214,9 @@ public class UsuariosDaoMySql implements DaoUsuario {
 				Rol rol = null;
 
 				if (rs.next()) {
-					usuario = new Usuario (rs.getLong("id"), rs.getString("nombre"), rs.getString("apellidos"),rs.getString("email"),rs.getString("password"),
-							rol,rs.getInt("edad"),rs.getDate("fecha_registro").toLocalDate());
+					rol= new Rol(rs.getLong("r.id"), rs.getString("r.nombre"),rs.getString("r.descripcion"));
+					usuario = new Usuario (rs.getLong("u.id"), rs.getString("u.nombre"), rs.getString("u.apellidos"),rs.getString("u.email"),rs.getString("u.password"),
+							rol,rs.getInt("u.edad"),rs.getDate("u.fecha_registro").toLocalDate());
 				}
 				
 				System.out.println(usuario);

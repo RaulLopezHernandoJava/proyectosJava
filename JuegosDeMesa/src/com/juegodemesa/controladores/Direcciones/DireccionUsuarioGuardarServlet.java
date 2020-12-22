@@ -1,4 +1,4 @@
-package com.juegodemesa.controladores.DireccionesServlet;
+package com.juegodemesa.controladores.Direcciones;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -13,7 +13,10 @@ import org.mindrot.jbcrypt.BCrypt;
 import com.juegodemesa.accesodatos.AccesoDatosException;
 import com.juegodemesa.accesodatos.RolesDaoTreeMap;
 import com.juegodemesa.controladores.Configuracion;
+import com.juegodemesa.modelos.ComunidadAutonoma;
 import com.juegodemesa.modelos.Direccion;
+import com.juegodemesa.modelos.Mecanica;
+import com.juegodemesa.modelos.Provincia;
 import com.juegodemesa.modelos.Rol;
 import com.juegodemesa.modelos.Usuario;
 
@@ -25,28 +28,40 @@ public class DireccionUsuarioGuardarServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     
     			// 1. Recepción de parámetros
+    			String id = request.getParameter("id");
     			String nombre = request.getParameter("nombre");
     			String apellidos = request.getParameter("apellidos");
-    			String pais = request.getParameter("pais");
     			String direccion = request.getParameter("direccion");
     			String codigoPostal = request.getParameter("codigoPostal");
     			String ciudad = request.getParameter("ciudad");
-    			String provincia = request.getParameter("provincia");
     			String telefono = request.getParameter("telefono");
     			String email = request.getParameter("email");
+    			String stringComunidad= request.getParameter("comunidad");
+    			String stringProvincia = request.getParameter("provincia");
+    			String activeString = "1";
     			
 
     			// 2. Empaquetar en objeto del modelo (entidad)
     			
-
-    			Direccion direccionUsuario = new Direccion(nombre, apellidos, pais, direccion, codigoPostal, ciudad, provincia,telefono,email);
+    			Boolean active = Boolean.parseBoolean(activeString);
+    			System.out.println("Boolean actuve" + active);
+    			Long comunidadId = Long.parseLong(stringComunidad);
+    			Long provinciaId = Long.parseLong(stringProvincia);
+    			
+    			Usuario usuario = Configuracion.daoUsuario.obtenerPorEmail(email);
+    			Long idUsuario = usuario.getId();
+    			
+    			
+    			
+    			
+    			Direccion direccionUsuario = new Direccion(id,nombre, apellidos, direccion, codigoPostal, ciudad,telefono,email,idUsuario,provinciaId,comunidadId,active);
     			System.out.println(direccionUsuario);
 
     			// 3. Tomar decisiones en base a los datos recibidos
 
     			if (!direccionUsuario.isCorrecto()) {
-    				request.setAttribute("direccion", direccionUsuario);
-    				request.getRequestDispatcher("/WEB-INF/vistas/usuario.jsp").forward(request, response);
+    				request.setAttribute("direccion", direccion);
+    				request.getRequestDispatcher("/WEB-INF/vistas/usuario/direccion.jsp").forward(request, response);
     				return;
     			}
 
@@ -55,11 +70,11 @@ public class DireccionUsuarioGuardarServlet extends HttpServlet {
     			try {
     				if (direccionUsuario.getId() == null) {
     					op = "inserción";
-    					Configuracion.daoUsuario.insertar(direccionUsuario);
+    					Configuracion.daoDireccion.insertar(direccionUsuario);
 
     				} else {
     					op = "modificación";
-    					Configuracion.daoUsuario.modificar(direccionUsuario);
+    					Configuracion.daoDireccion.modificar(direccionUsuario);
     				}
 
     				alertaMensaje = "La " + op + " se ha hecho correctamente";
@@ -77,7 +92,7 @@ public class DireccionUsuarioGuardarServlet extends HttpServlet {
     			session.setAttribute("alertatipo", alertaTipo);
 
     			// 5. Redireccionar a la siguiente pantalla
-    			response.sendRedirect(request.getContextPath() + "/admin/listadoUsuarios");
+    			response.sendRedirect(request.getContextPath() + "/admin/listadoDirecciones");
 	}
     
     

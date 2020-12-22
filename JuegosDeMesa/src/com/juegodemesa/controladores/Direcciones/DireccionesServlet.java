@@ -1,4 +1,4 @@
-package com.juegodemesa.controladores.DireccionesServlet;
+package com.juegodemesa.controladores.Direcciones;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ public class DireccionesServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("direcciones", Configuracion.dao.obtenerTodos());
+		request.setAttribute("direcciones", Configuracion.daoDireccion.obtenerTodos());
 		request.getRequestDispatcher("/WEB-INF/vistas/admin/direcciones.jsp").forward(request, response);
 
 	}

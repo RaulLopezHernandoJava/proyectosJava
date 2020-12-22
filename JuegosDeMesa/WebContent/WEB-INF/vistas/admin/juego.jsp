@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/vistas/includes/cabecera.jsp"%>
 
 <div class="row">
-	<h1 class="col-12">Edición de juego</h1>
+	<h1 class="col-12">Detalle y Modificacion Juego</h1>
 
 	<div class="col-12">
 		<form action="admin/guardar" method="post">

@@ -4,13 +4,13 @@ public class Direccion {
 	private Long id;
 	private String nombre;
 	private String apellidos;
-	private String pais;
 	private String direccion;
 	private Integer codigoPostal;
 	private String ciudad;
-	private String provincia;
 	private String telefono;
 	private String email;
+	private Long provincia;
+	private Long comunidadAutonoma;
 	private Long idUsuario;
 	private Boolean active;
 	
@@ -18,21 +18,21 @@ public class Direccion {
 	private boolean correcto = true;
 
 	private String errorId, errorNombre, errorApellidos, errorDireccion, 
-				   errorCodigoPostal, errorCiudad, errorProvincia, errorTelefono,errorEmail,errorIdUsuario,errorActive;
+				   errorCodigoPostal, errorCiudad, errorComunidadAutonoma, errorProvincia, errorTelefono,errorEmail,errorIdUsuario,errorActive;
 	
 	
 	
 	// Constructores
 
-	public Direccion(Long id, String nombre, String apellidos, String pais, String direccion, Integer codigoPostal,
-			String ciudad, String provincia, String telefono, String email, Long idUsuario,Boolean active) {
+	public Direccion(Long id, String nombre, String apellidos, String direccion, Integer codigoPostal,
+			String ciudad, Long comunidadAutonoma, Long provincia, String telefono, String email, Long idUsuario,Boolean active) {
 		setId(id);
 		setNombre(nombre);
 		setApellidos(apellidos);
-		setPais(pais);
 		setDireccion(direccion);
 		setCodigoPostal(codigoPostal);
 		setCiudad(ciudad);
+		setComunidadAutonoma(comunidadAutonoma);
 		setProvincia(provincia);
 		setTelefono(telefono);
 		setEmail(email);
@@ -41,15 +41,15 @@ public class Direccion {
 	}
 	
 	
-	public Direccion(String id, String nombre, String apellidos, String pais, String direccion, Integer codigoPostal,
-					String ciudad,String provincia, String telefono,String email, String idUsuario) {
+	public Direccion(String id, String nombre, String apellidos, String direccion, Integer codigoPostal,
+					String ciudad,Long comunidadAutonoma,Long provincia, String telefono,String email, String idUsuario) {
 		setId(id);
 		setNombre(nombre);
 		setApellidos(apellidos);
-		setPais(pais);
 		setDireccion(direccion);
 		setCodigoPostal(codigoPostal);
 		setCiudad(ciudad);
+		setComunidadAutonoma(comunidadAutonoma);
 		setProvincia(provincia);
 		setTelefono(telefono);
 		setEmail(email);
@@ -57,19 +57,51 @@ public class Direccion {
 		
 	}
 	
-	public Direccion(String nombre, String apellidos, String pais, String direccion, String codigoPostal,
-			String ciudad, String provincia, String telefono, String email) {
+	public Direccion(String nombre, String apellidos,String direccion, String codigoPostal,
+			String ciudad, Long comunidadAutonoma, Long provincia, String telefono, String email) {
 		setNombre(nombre);
 		setApellidos(apellidos);
-		setPais(pais);
 		setDireccion(direccion);
 		setCodigoPostal(codigoPostal);
 		setCiudad(ciudad);
+		setComunidadAutonoma(comunidadAutonoma);
 		setProvincia(provincia);
 		setTelefono(telefono);
 		setEmail(email);
 	}
-
+	
+	public Direccion(String nombre, String apellidos, String direccion, String codigoPostal, String ciudad,
+			String telefono, String email,  Long idUsuario, Long provinciaId, Long comunidadId, Boolean active) {
+		setNombre(nombre);
+		setApellidos(apellidos);
+		setDireccion(direccion);
+		setCodigoPostal(codigoPostal);
+		setCiudad(ciudad);
+		setTelefono(telefono);
+		setEmail(email);
+		setIdUsuario(idUsuario);
+		setProvincia(provinciaId);
+		setComunidadAutonoma(comunidadId);
+		setActive(active);
+	}
+	
+	public Direccion(String id,String nombre, String apellidos, String direccion, String codigoPostal, String ciudad,
+			String telefono, String email,  Long idUsuario, Long provinciaId, Long comunidadId, Boolean active) {
+		setId(id);
+		setNombre(nombre);
+		setApellidos(apellidos);
+		setDireccion(direccion);
+		setCodigoPostal(codigoPostal);
+		setCiudad(ciudad);
+		setTelefono(telefono);
+		setEmail(email);
+		setIdUsuario(idUsuario);
+		setProvincia(provinciaId);
+		setComunidadAutonoma(comunidadId);
+		setActive(active);
+	}
+	
+	
 	public Direccion() {
 	
 	}
@@ -77,7 +109,8 @@ public class Direccion {
 	
 	
 	// Getters y Setters
-	
+
+
 
 	public Long getId() {
 		return id;
@@ -117,17 +150,6 @@ public class Direccion {
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
-
-
-	public String getPais() {
-		return pais;
-	}
-
-
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-
 
 	public String getDireccion() {
 		return direccion;
@@ -169,13 +191,24 @@ public class Direccion {
 		this.ciudad = ciudad;
 	}
 
+	
 
-	public String getProvincia() {
+	public Long getComunidadAutonoma() {
+		return comunidadAutonoma;
+	}
+
+
+	public void setComunidadAutonoma(Long comunidadAutonoma) {
+		this.comunidadAutonoma = comunidadAutonoma;
+	}
+
+
+	public Long getProvincia() {
 		return provincia;
 	}
 
 
-	public void setProvincia(String provincia) {
+	public void setProvincia(Long provincia) {
 		this.provincia = provincia;
 	}
 
@@ -307,6 +340,16 @@ public class Direccion {
 		correcto = false;
 		this.errorCiudad = errorCiudad;
 	}
+	
+	public String getErrorComunidadAutonoma() {
+		return errorComunidadAutonoma;
+	}
+
+
+	public void setErrorComunidadAutonoma(String errorComunidadAutonoma) {
+		correcto = false;
+		this.errorComunidadAutonoma = errorComunidadAutonoma;
+	}
 
 
 	public String getErrorProvincia() {
@@ -364,6 +407,11 @@ public class Direccion {
 	}
 
 
+	
+
+	// HashCode() and Equals()
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -372,12 +420,12 @@ public class Direccion {
 		result = prime * result + ((apellidos == null) ? 0 : apellidos.hashCode());
 		result = prime * result + ((ciudad == null) ? 0 : ciudad.hashCode());
 		result = prime * result + ((codigoPostal == null) ? 0 : codigoPostal.hashCode());
+		result = prime * result + ((comunidadAutonoma == null) ? 0 : comunidadAutonoma.hashCode());
 		result = prime * result + ((direccion == null) ? 0 : direccion.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((idUsuario == null) ? 0 : idUsuario.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-		result = prime * result + ((pais == null) ? 0 : pais.hashCode());
 		result = prime * result + ((provincia == null) ? 0 : provincia.hashCode());
 		result = prime * result + ((telefono == null) ? 0 : telefono.hashCode());
 		return result;
@@ -413,6 +461,11 @@ public class Direccion {
 				return false;
 		} else if (!codigoPostal.equals(other.codigoPostal))
 			return false;
+		if (comunidadAutonoma == null) {
+			if (other.comunidadAutonoma != null)
+				return false;
+		} else if (!comunidadAutonoma.equals(other.comunidadAutonoma))
+			return false;
 		if (direccion == null) {
 			if (other.direccion != null)
 				return false;
@@ -438,11 +491,6 @@ public class Direccion {
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
-		if (pais == null) {
-			if (other.pais != null)
-				return false;
-		} else if (!pais.equals(other.pais))
-			return false;
 		if (provincia == null) {
 			if (other.provincia != null)
 				return false;
@@ -455,16 +503,17 @@ public class Direccion {
 			return false;
 		return true;
 	}
-	
-	// toString()
-	
+
+
 	@Override
 	public String toString() {
-		return "Direccion [id=" + id + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pais=" + pais
-				+ ", direccion=" + direccion + ", codigoPostal=" + codigoPostal + ", ciudad=" + ciudad + ", provincia="
-				+ provincia + ", telefono=" + telefono + ", email=" + email + ", idUsuario=" + idUsuario + ", active="
-				+ active + "]";
+		return "Direccion [id=" + id + ", nombre=" + nombre + ", apellidos=" + apellidos + ", direccion=" + direccion
+				+ ", codigoPostal=" + codigoPostal + ", ciudad=" + ciudad + ", telefono=" + telefono + ", email="
+				+ email + ", provincia=" + provincia + ", comunidadAutonoma=" + comunidadAutonoma + ", idUsuario="
+				+ idUsuario + ", active=" + active + "]";
 	}
+
+	
 
 	
 }

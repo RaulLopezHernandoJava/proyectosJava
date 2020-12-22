@@ -2,16 +2,21 @@ package com.juegodemesa.accesodatos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.juegodemesa.controladores.Configuracion;
+import com.juegodemesa.modelos.ComunidadAutonoma;
 import com.juegodemesa.modelos.Direccion;
+import com.juegodemesa.modelos.Mecanica;
+import com.juegodemesa.modelos.Provincia;
 import com.juegodemesa.modelos.Rol;
 import com.juegodemesa.modelos.Usuario;
 
-public class DireccionesDaoMySql implements DaoDireccion {
+public class DireccionesDaoMySql implements DaoDireccion,Dao<Direccion> {
 
 	private DireccionesDaoMySql() {
 	}
@@ -26,12 +31,15 @@ public class DireccionesDaoMySql implements DaoDireccion {
 	private static final String USER = "debian-sys-maint";
 	private static final String PASS = "o8lAkaNtX91xMUcV";
 
-	private static final String SQL_SELECT = "SELECT * FROM direcciones u WHERE active =TRUE";
+	private static final String SQL_SELECT = "SELECT * FROM direcciones d JOIN provincias p ON d.id_provincia = p.id JOIN comunidadesAutonomas c ON d.id_comunidad = c.id";
 //	private static final String SQL_SELECT_ID = "SELECT * FROM usuarios j JOIN roles r ON u.id_rol = r.id WHERE u.id = ?";
-//	private static final String SQL_SELECT_USER = "SELECT * FROM usuarios u WHERE u.email = ?";
+	private static final String SQL_SELECT_PROVINCIA = "SELECT * FROM provincias p WHERE p.nombre = ?"; 
+	private static final String SQL_SELECT_COMUNIDAD = "SELECT * FROM comunidadesAutonomas c WHERE c.nombre = ?";
+	private static final String SQL_SELECT_DIRECCION = "SELECT * FROM direcciones d JOIN provincias p ON d.id_provincia = p.id JOIN comunidadesAutonomas c ON d.id_comunidad = c.id WHERE d.email = ?";
 //	private static final String SQL_SELECT_PASSWORD = "SELECT u.password FROM usuarios u WHERE u.email = ?";
-//	private static final String SQL_INSERT = "INSERT INTO usuarios (nombre, apellidos, email, id_rol , password,  edad , fecha_registro ) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//	private static final String SQL_UPDATE = "UPDATE usuarios SET nombre = ?, apellidos = ?, email= ? , id_rol = ? , edad = ? , fechaRegistro = ? WHERE id = ?";
+    private static final String SQL_INSERT = "INSERT INTO direcciones (nombre,apellidos,direccion,codigo_postal,ciudad,telefono,email,id_usuario,id_provincia,id_comunidad,active ) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
+	private static final String SQL_UPDATE = "UPDATE direcciones SET nombre = ?, apellidos = ?, direccion= ? , codigo_postal = ? , ciudad = ? ,"
+											 + " telefono = ?, email=?, id_usuario =?, id_comunidad = ?,id_provincia =? , active =? WHERE id = ?";
 //	private static final String SQL_DELETE = "DELETE FROM usuarios WHERE id = ?";
 
 	static {
@@ -42,7 +50,7 @@ public class DireccionesDaoMySql implements DaoDireccion {
 		}
 	}
 	
-	// OBTENER TODOS LOS JUEGOS
+	// OBTENER TODAS LAS DIRECCIONES
 	
 		@Override
 		public Iterable<Direccion> obtenerTodos() {
@@ -50,13 +58,14 @@ public class DireccionesDaoMySql implements DaoDireccion {
 					Statement s = con.createStatement();
 					ResultSet rs = s.executeQuery(SQL_SELECT);) {
 				ArrayList<Direccion> direcciones= new ArrayList<>();
+				
+				
 
 				Direccion direccion;
 
 				while (rs.next()) {
-					
-					direccion = new Direccion (rs.getLong("id"), rs.getString("nombre"), rs.getString("apellidos"),rs.getString("pais"),
-							rs.getString("direccion"),rs.getInt("codigo_postal"),rs.getString("ciudad"),rs.getString("provincia"),rs.getString("telefono"),
+					direccion = new Direccion (rs.getLong("id"), rs.getString("nombre"), rs.getString("apellidos"),
+							rs.getString("direccion"),rs.getInt("codigo_postal"),rs.getString("ciudad"),rs.getLong("id_comunidad"),rs.getLong("id_provincia"),rs.getString("telefono"),
 							rs.getString("email"),rs.getLong("id_usuario"),rs.getBoolean("active"));
 
 					direcciones.add(direccion);
@@ -68,11 +77,161 @@ public class DireccionesDaoMySql implements DaoDireccion {
 			}
 
 		}
+		
+		
+	// INSERTAR DIRECCION
+		
+		public void insertar(Direccion direccion) {
+			try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+					PreparedStatement ps = con.prepareStatement(SQL_INSERT);) {
+
+				ps.setString(1, direccion.getNombre());
+				ps.setString(2, direccion.getApellidos());
+				ps.setString(3, direccion.getDireccion());
+				ps.setInt(4,direccion.getCodigoPostal());
+				ps.setString(5, direccion.getCiudad());
+				ps.setString(6, direccion.getTelefono());
+				ps.setString(7, direccion.getEmail());
+				ps.setLong(8, direccion.getIdUsuario());
+				ps.setLong(9, direccion.getProvincia());
+				ps.setLong(10, direccion.getComunidadAutonoma());
+				ps.setBoolean(11, direccion.getActive());
+		
+				
+				
+				int numeroRegistrosInsertados = ps.executeUpdate();
+				
+				if(numeroRegistrosInsertados == 0) {
+					throw new AccesoDatosException("No se ha conseguido insertar el registro");
+				} else if(numeroRegistrosInsertados > 1) {
+					throw new AccesoDatosException("SE HA INSERTADO MÁS DE UN REGISTRO");
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new AccesoDatosException("Ha habido un problema al insertar a el usuario");
+				
+			}
+		}
+	
+		
+	
+	// MODIFICAR DIRECCION
+
+		@Override
+		public void modificar(Direccion direccion) {
+			try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+					PreparedStatement ps = con.prepareStatement(SQL_UPDATE);) {
+
+				ps.setString(1, direccion.getNombre());
+				ps.setString(2, direccion.getApellidos());
+				ps.setString(3, direccion.getDireccion());
+				ps.setInt(4,direccion.getCodigoPostal());
+				ps.setString(5, direccion.getCiudad());
+				ps.setString(6, direccion.getTelefono());
+				ps.setString(7, direccion.getEmail());
+				ps.setLong(8, direccion.getIdUsuario());
+				ps.setLong(9, direccion.getComunidadAutonoma());
+				ps.setLong(10, direccion.getProvincia());
+				ps.setBoolean(11, direccion.getActive());
+				ps.setLong(12, direccion.getId());
+				
+				int numeroRegistrosModificados = ps.executeUpdate();
+				
+				if(numeroRegistrosModificados == 0) {
+					throw new AccesoDatosException("No se ha encontrado el registro a modificar");
+				} else if(numeroRegistrosModificados > 1) {
+					throw new AccesoDatosException("SE HA MODIFICADO MÁS DE UN REGISTRO");
+				}
+
+			} catch (SQLException e) {
+				throw new AccesoDatosException("Ha habido un problema al modificar al modificar la direccion", e);
+			}
+		}
 
 	@Override
 	public Direccion obtenerPorEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_DIRECCION);) {
+
+			ps.setString(1, email);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				Direccion direccion = null;
+
+				if (rs.next()) {
+					direccion = new Direccion (rs.getLong("d.id"), rs.getString("d.nombre"), rs.getString("d.apellidos"),rs.getString("d.direccion"),
+							rs.getInt("d.codigo_postal"),rs.getString("d.ciudad"),rs.getLong("d.id_comunidad"),rs.getLong("d.id_provincia"),rs.getString("d.telefono"),
+							rs.getString("d.email"),rs.getLong("d.id_usuario"),rs.getBoolean("d.active"));
+				}
+				
+				System.out.println(direccion);
+
+				return direccion ;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtener la direccion del usuario cuyo email es " + email, e);
+		}
 	}
+
+	@Override
+	public Provincia obtenerProvinciaPorId(Long idProvincia) {
+		
+		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_PROVINCIA);) {
+
+			ps.setLong(1, idProvincia);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				Provincia provincia = null;
+
+				if (rs.next()) {
+					provincia = new Provincia(rs.getLong("p.id"),rs.getString("p.nombre"),rs.getLong("p.id_comunidad"));
+					
+				}
+				
+				System.out.println(provincia);
+
+				return provincia ;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtener la provincia de la direccion cuyo id es " + idProvincia, e);
+		}
+	
+	}
+
+	@Override
+	public ComunidadAutonoma obtenerComunidadAutonomaPorId(Long idComunidad) {
+
+		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_COMUNIDAD);) {
+
+			ps.setLong(1, idComunidad);
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				ComunidadAutonoma comunidadAutonoma = null;
+
+				if (rs.next()) {
+					comunidadAutonoma= new ComunidadAutonoma(rs.getLong("c.id"), rs.getString("c.nombre"));
+					
+				}
+				
+				System.out.println(comunidadAutonoma);
+
+				return comunidadAutonoma ;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtener el nombre de la comunidad autonoma de la direccion cuyo id es " + idComunidad, e);
+		}
+	
+	}
+
+	
+
+
+	
 
 }

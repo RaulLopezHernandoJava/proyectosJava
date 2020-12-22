@@ -43,6 +43,9 @@ public class LoginServlet extends HttpServlet {
 			
 			if(BCrypt.checkpw(password, hashedPassword)) {
 				request.getSession().setAttribute("email", email);
+				Usuario usuarioLogeado = Configuracion.daoUsuario.obtenerPorEmail(email);
+				String rolUsuarioLogeado = usuarioLogeado.getRol().getNombre();
+				request.getSession().setAttribute("rol", rolUsuarioLogeado);
 				response.sendRedirect(request.getContextPath() + "/admin/listado");
 				//request.getRequestDispatcher(request.getContextPath() + "/admin/listado").forward(request, response);
 				

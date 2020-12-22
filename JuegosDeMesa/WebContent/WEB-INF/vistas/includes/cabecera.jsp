@@ -29,29 +29,41 @@
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
-				<c:if test="${sessionScope.email != null}">
-					<li class="nav-item"><a class="nav-link" href="admin/listado">Listado
-							de juegos</a></li>
-					<li class="nav-item"><a class="nav-link" href="admin/juego">Añadir
-							juego</a></li>
+			<ul class="navbar-nav ml-auto ">
+				<c:if test="${sessionScope.rol == 'administrador'}">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Mi Cuenta - ${email} </a>
+
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" href="admin/juego">Añadir
+									Juego</a></li>
+							<li><a class="dropdown-item" href="admin/listado">Listado
+									de Juegos</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="logout">Salir</a></li>
+						</ul></li>
 				</c:if>
+				
 			</ul>
 			<ul class="navbar-nav">
 				<c:choose>
-					<c:when test="${sessionScope.email != null}">
+					<c:when test="${sessionScope.rol == 'usuario'}">
 						<li class="nav-item dropdown"><a
 							class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 							role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Mi Cuenta - ${email} </a>
+
 							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a class="dropdown-item" href="user/datosUsuario">Datos Usuario</a></li>
-								<li><a class="dropdown-item" href="#">Direccion Envio</a></li>
+								<li><a class="dropdown-item" href="user/datosUsuario">Datos
+										Usuario</a></li>
+								<li><a class="dropdown-item" href="user/datosDireccion">Direccion
+										Envio</a></li>
 								<li><a class="dropdown-item" href="#">Pedidos</a></li>
 								<li><hr class="dropdown-divider"></li>
 								<li><a class="dropdown-item" href="logout">Salir</a></li>
 							</ul></li>
-						
 					</c:when>
 					<c:otherwise>
 						<li class="nav-item"><a class="nav-link" href="login">Login</a></li>

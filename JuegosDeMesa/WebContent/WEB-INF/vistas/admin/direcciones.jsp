@@ -8,9 +8,9 @@
 			<th>Id</th>
 			<th>Nombre</th>
 			<th>Apellidos</th>
-			<th>Pais</th>
 			<th>CodigoPostal</th>
 			<th>Ciudad</th>
+			<th>Comunidad</th>
 			<th>Provincia</th>
 			<th>Telefono</th>
 			<th>Email</th>
@@ -24,6 +24,7 @@
 				<td>${direccion.apellidos}</td>
 				<td>${direccion.codigoPostal}</td>
 				<td>${direccion.ciudad}</td>
+				<td>${direccion.comunidadAutonoma}</td>
 				<td>${direccion.provincia}</td>
 				<td>${direccion.telefono}</td>
 				<td>${direccion.email}</td>
