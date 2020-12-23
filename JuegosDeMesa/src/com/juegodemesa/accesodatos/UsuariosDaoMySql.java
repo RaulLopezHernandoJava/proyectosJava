@@ -8,6 +8,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 import com.juegodemesa.controladores.Configuracion;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mecanica;
@@ -16,8 +21,16 @@ import com.juegodemesa.modelos.Usuario;
 
 public class UsuariosDaoMySql implements DaoUsuario {
 
+	private DataSource dataSource;
 	// SINGLETON
 	private UsuariosDaoMySql() {
+		try {
+			InitialContext initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			dataSource = (DataSource) envCtx.lookup("jdbc/juegos");
+		} catch (NamingException e) {
+			throw new AccesoDatosException("No se ha encontrado el pool de conexiones", e);
+		}
 	}
 
 	private static final UsuariosDaoMySql INSTANCIA = new UsuariosDaoMySql();
@@ -29,9 +42,6 @@ public class UsuariosDaoMySql implements DaoUsuario {
 	// FIN SINGLETON
 
 	// characterEncoding=UTF-8 cambia la codificación de los PreparedStatement de Windows-1252 a UTF-8
-	private static final String URL = "jdbc:mysql://localhost:3306/juegos_bdd?characterEncoding=UTF-8";
-	private static final String USER = "debian-sys-maint";
-	private static final String PASS = "o8lAkaNtX91xMUcV";
 
 	private static final String SQL_SELECT = "SELECT * FROM usuarios u JOIN roles r ON u.id_rol = r.id";
 	private static final String SQL_SELECT_ID = "SELECT * FROM usuarios j JOIN roles r ON u.id_rol = r.id WHERE u.id = ?";
@@ -62,7 +72,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 	
 	@Override
 	public Iterable<Usuario> obtenerTodos() {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				Statement s = con.createStatement();
 				ResultSet rs = s.executeQuery(SQL_SELECT);) {
 			ArrayList<Usuario> usuarios= new ArrayList<>();
@@ -92,7 +102,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 	@Override
 	public Usuario obtenerPorId(Long id) {
 
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_ID);) {
 
 			ps.setLong(1, id);
@@ -119,7 +129,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 
 	@Override
 	public void insertar(Usuario usuario) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_INSERT);) {
 
 			ps.setString(1, usuario.getNombre());
@@ -151,7 +161,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 
 	@Override
 	public void modificar(Usuario usuario) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_UPDATE);) {
 
 			ps.setString(1, usuario.getNombre());
@@ -178,7 +188,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 	// BORRAR USUARIO
 	@Override
 	public void borrar(Long id) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_DELETE);) {
 
 			ps.setLong(1, id);
@@ -203,7 +213,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 	// OBTENER USUARIO A TRAVES DEL EMAIL
 	
 	public Usuario obtenerPorEmail(String email) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_USER);) {
 
 			ps.setString(1, email);

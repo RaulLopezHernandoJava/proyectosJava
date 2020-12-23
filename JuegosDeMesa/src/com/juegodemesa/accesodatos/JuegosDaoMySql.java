@@ -1,20 +1,33 @@
 package com.juegodemesa.accesodatos;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mecanica;
 
 public class JuegosDaoMySql implements Dao<Juego> {
 
+	private DataSource dataSource;
+
 	// SINGLETON
 	private JuegosDaoMySql() {
+		try {
+			InitialContext initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			dataSource = (DataSource) envCtx.lookup("jdbc/juegos");
+		} catch (NamingException e) {
+			throw new AccesoDatosException("No se ha encontrado el pool de conexiones", e);
+		}
 	}
 
 	private static final JuegosDaoMySql INSTANCIA = new JuegosDaoMySql();
@@ -24,10 +37,8 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	}
 	// FIN SINGLETON
 
-	// characterEncoding=UTF-8 cambia la codificación de los PreparedStatement de Windows-1252 a UTF-8
-	private static final String URL = "jdbc:mysql://localhost:3306/juegos_bdd?characterEncoding=UTF-8";
-	private static final String USER = "debian-sys-maint";
-	private static final String PASS = "o8lAkaNtX91xMUcV";
+	// characterEncoding=UTF-8 cambia la codificación de los PreparedStatement de
+	// Windows-1252 a UTF-8
 
 	private static final String SQL_SELECT = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.active = TRUE";
 	private static final String SQL_SELECT_ID = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.id = ? WHERE j.active=TRUE ";
@@ -57,10 +68,10 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	}
 
 	// OBTENER TODOS LOS JUEGOS
-	
+
 	@Override
 	public Iterable<Juego> obtenerTodos() {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				Statement s = con.createStatement();
 				ResultSet rs = s.executeQuery(SQL_SELECT);) {
 			ArrayList<Juego> juegos = new ArrayList<>();
@@ -72,12 +83,11 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			// colección
 			while (rs.next()) {
 				mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
-				juego = new Juego(rs.getLong("id"), rs.getString("nombre"), rs.getString("autor"),rs.getString("editorial"),
-						mecanica,rs.getDouble("precio"),rs.getString("imagen"),rs.getDate("fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
+				juego = new Juego(rs.getLong("id"), rs.getString("nombre"), rs.getString("autor"),
+						rs.getString("editorial"), mecanica, rs.getDouble("precio"), rs.getString("imagen"),
+						rs.getDate("fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 				juegos.add(juego);
 			}
-			
-			
 
 			return juegos;
 		} catch (SQLException e) {
@@ -85,14 +95,13 @@ public class JuegosDaoMySql implements Dao<Juego> {
 		}
 
 	}
-	
+
 	// OBTENER UN JUEGO
 
 	@Override
 	public Juego obtenerPorId(Long id) {
 
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
-				PreparedStatement ps = con.prepareStatement(SQL_SELECT_ID);) {
+		try (Connection con = dataSource.getConnection(); PreparedStatement ps = con.prepareStatement(SQL_SELECT_ID);) {
 
 			ps.setLong(1, id);
 			System.out.println("El id que se encuentra en el metodo obtener por id es " + id);
@@ -103,42 +112,41 @@ public class JuegosDaoMySql implements Dao<Juego> {
 				Mecanica mecanica = null;
 
 				if (rs.next()) {
-					
-						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
-						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
-					
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+
 				}
 				System.out.println("Este es el metodo de obtener por Id" + juego);
 
-				return juego ;
+				return juego;
 			}
 		} catch (SQLException e) {
 			throw new AccesoDatosException("Ha habido un problema al obtener el juego cuyo id es " + id, e);
 		}
 	}
-	
-	//INSERTAR JUEGO
+
+	// INSERTAR JUEGO
 
 	@Override
 	public void insertar(Juego juego) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
-				PreparedStatement ps = con.prepareStatement(SQL_INSERT);) {
+		try (Connection con = dataSource.getConnection(); PreparedStatement ps = con.prepareStatement(SQL_INSERT);) {
 
 			ps.setString(1, juego.getNombre());
 			ps.setString(2, juego.getAutor());
 			ps.setString(3, juego.getEditorial());
-			ps.setLong(4,juego.getMecanica().getId());
+			ps.setLong(4, juego.getMecanica().getId());
 			ps.setString(5, juego.getImagen());
 			ps.setObject(6, juego.getFechaPublicacion());
-	
-			
-			
+
 			int numeroRegistrosInsertados = ps.executeUpdate();
-			
-			if(numeroRegistrosInsertados == 0) {
+
+			if (numeroRegistrosInsertados == 0) {
 				throw new AccesoDatosException("No se ha conseguido insertar el registro");
-			} else if(numeroRegistrosInsertados > 1) {
+			} else if (numeroRegistrosInsertados > 1) {
 				throw new AccesoDatosException("SE HA INSERTADO MÁS DE UN REGISTRO");
 			}
 
@@ -146,27 +154,26 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			throw new AccesoDatosException("Ha habido un problema al insertar el juego", e);
 		}
 	}
-	
+
 	// MODIFICAR JUEGO
 
 	@Override
 	public void modificar(Juego juego) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
-				PreparedStatement ps = con.prepareStatement(SQL_UPDATE);) {
+		try (Connection con = dataSource.getConnection(); PreparedStatement ps = con.prepareStatement(SQL_UPDATE);) {
 
 			ps.setString(1, juego.getNombre());
 			ps.setString(2, juego.getAutor());
 			ps.setString(3, juego.getEditorial());
-			ps.setLong(4,juego.getMecanica().getId());
+			ps.setLong(4, juego.getMecanica().getId());
 			ps.setString(5, juego.getImagen());
 			ps.setObject(6, juego.getFechaPublicacion());
 			ps.setLong(7, juego.getId());
-			
+
 			int numeroRegistrosModificados = ps.executeUpdate();
-			
-			if(numeroRegistrosModificados == 0) {
+
+			if (numeroRegistrosModificados == 0) {
 				throw new AccesoDatosException("No se ha encontrado el registro a modificar");
-			} else if(numeroRegistrosModificados > 1) {
+			} else if (numeroRegistrosModificados > 1) {
 				throw new AccesoDatosException("SE HA MODIFICADO MÁS DE UN REGISTRO");
 			}
 
@@ -178,16 +185,15 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	// BORRAR JUEGO
 	@Override
 	public void borrar(Long id) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
-				PreparedStatement ps = con.prepareStatement(SQL_DELETE);) {
+		try (Connection con = dataSource.getConnection(); PreparedStatement ps = con.prepareStatement(SQL_DELETE);) {
 
 			ps.setLong(1, id);
 
 			int numeroRegistrosBorrados = ps.executeUpdate();
-			
-			if(numeroRegistrosBorrados == 0) {
+
+			if (numeroRegistrosBorrados == 0) {
 				throw new AccesoDatosException("Se ha intentado borrar un id inexistente");
-			} else if(numeroRegistrosBorrados > 1) {
+			} else if (numeroRegistrosBorrados > 1) {
 				throw new AccesoDatosException("SE HA BORRADO MÁS DE UN REGISTRO");
 			}
 
@@ -195,140 +201,146 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			throw new AccesoDatosException("Ha habido un problema al obtener el juego cuyo id es " + id, e);
 		}
 	}
-	
+
 	// FILTRAR POR AUTOR
-	
-	
+
 	public Iterable<Juego> filtrarJuegosAutor(String autor) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_AUTOR);) {
-			
+
 			ps.setString(1, autor);
-			
+
 			ArrayList<Juego> juegos = new ArrayList<>();
-			
+
 			try (ResultSet rs = ps.executeQuery()) {
 
 				Juego juego = null;
 				Mecanica mecanica = null;
 
 				if (rs.next()) {
-					
-						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
-						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
-						juegos.add(juego);
-					
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+					juegos.add(juego);
+
 				}
-				
-				return juegos ;
+
+				return juegos;
 			}
 		} catch (SQLException e) {
 			throw new AccesoDatosException("Ha habido un problema al obtener los juegos cuyo autor es  " + autor, e);
 		}
 
 	}
-	
-	
+
 	// FILTRAR POR EDITORIAL
-	
+
 	public Iterable<Juego> filtrarJuegosEditorial(String editorial) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_EDITORIAL);) {
-			
+
 			System.out.println("LLego aqui " + editorial);
-			
+
 			ps.setString(1, editorial);
-			
+
 			ArrayList<Juego> juegos = new ArrayList<>();
-			
+
 			try (ResultSet rs = ps.executeQuery()) {
 
 				Juego juego = null;
 				Mecanica mecanica = null;
 
 				if (rs.next()) {
-					
-						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
-						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
-						juegos.add(juego);
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+					juegos.add(juego);
 				}
-				
+
 				System.out.println("Estos son los juegos filtrados por editorial" + juegos);
 
-				return juegos ;
+				return juegos;
 			}
 		} catch (SQLException e) {
-			throw new AccesoDatosException("Ha habido un problema al obtener los juegos cuyo editorial es  " + editorial, e);
+			throw new AccesoDatosException(
+					"Ha habido un problema al obtener los juegos cuyo editorial es  " + editorial, e);
 		}
 
 	}
-	
-	
+
 	// FILTRAR POR MECANICA
-	
-	
+
 	public Iterable<Juego> filtrarJuegosMecanica(String mecanicaString) {
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_MECHANIC);) {
-			
+
 			System.out.println("Esta es la mecanica que llega al metodo" + mecanicaString);
-			
+
 			ps.setString(1, mecanicaString);
-			
+
 			ArrayList<Juego> juegos = new ArrayList<>();
-			
+
 			try (ResultSet rs = ps.executeQuery()) {
 
 				Juego juego = null;
 				Mecanica mecanica = null;
 
 				if (rs.next()) {
-					
-						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
-						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
-						juegos.add(juego);
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+					juegos.add(juego);
 				}
-				
+
 				System.out.println("Estos son los juegos filtrados por mecanica" + juegos);
 
-				return juegos ;
+				return juegos;
 			}
 		} catch (SQLException e) {
-			throw new AccesoDatosException("Ha habido un problema al obtener los juegos cuya mecanica es  " + mecanicaString, e);
+			throw new AccesoDatosException(
+					"Ha habido un problema al obtener los juegos cuya mecanica es  " + mecanicaString, e);
 		}
 
 	}
-	
+
 	// FILTRAR POR PRECIO
-	
-	public Iterable<Juego> filtrarJuegosPrecio(Integer min ,Integer max){
-		try (Connection con = DriverManager.getConnection(URL, USER, PASS);
+
+	public Iterable<Juego> filtrarJuegosPrecio(Integer min, Integer max) {
+		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_PRICES);) {
-			
-			ps.setInt(1,min);
-			ps.setInt(2,max);
-			
+
+			ps.setInt(1, min);
+			ps.setInt(2, max);
+
 			ArrayList<Juego> juegos = new ArrayList<>();
-			
+
 			try (ResultSet rs = ps.executeQuery()) {
 
 				Juego juego = null;
 				Mecanica mecanica = null;
 
 				if (rs.next()) {
-					
-						mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
-						juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),rs.getString("j.editorial"),
-								mecanica,rs.getDouble("precio"),rs.getString("j.imagen"),rs.getDate("j.fecha_publicacion").toLocalDate(),rs.getBoolean("active"));
-						juegos.add(juego);
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+					juegos.add(juego);
 				}
-				
+
 				System.out.println("Estos son los juegos filtrados por precio" + juegos);
 
-				return juegos ;
+				return juegos;
 			}
 		} catch (SQLException e) {
 			throw new AccesoDatosException("Ha habido un problema al obtene los precios de los juegos", e);
