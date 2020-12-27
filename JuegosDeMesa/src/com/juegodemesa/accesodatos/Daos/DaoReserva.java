@@ -1,4 +1,4 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.Daos;
 
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Reserva;

@@ -1,15 +1,15 @@
 package com.juegodemesa.controladores;
 
-import com.juegodemesa.accesodatos.Dao;
-import com.juegodemesa.accesodatos.DaoDireccion;
-import com.juegodemesa.accesodatos.DaoReserva;
-import com.juegodemesa.accesodatos.DaoUsuario;
-import com.juegodemesa.accesodatos.DireccionesDaoMySql;
-import com.juegodemesa.accesodatos.JuegosDaoMySql;
-import com.juegodemesa.accesodatos.MecanicasDaoTreeMap;
-import com.juegodemesa.accesodatos.ReservasDaoMySql;
-import com.juegodemesa.accesodatos.RolesDaoTreeMap;
-import com.juegodemesa.accesodatos.UsuariosDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.DireccionesDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.JuegosDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.ReservasDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.UsuariosDaoMySql;
+import com.juegodemesa.accesodatos.DaoTreeMap.MecanicasDaoTreeMap;
+import com.juegodemesa.accesodatos.DaoTreeMap.RolesDaoTreeMap;
+import com.juegodemesa.accesodatos.Daos.Dao;
+import com.juegodemesa.accesodatos.Daos.DaoDireccion;
+import com.juegodemesa.accesodatos.Daos.DaoReserva;
+import com.juegodemesa.accesodatos.Daos.DaoUsuario;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mecanica;
 import com.juegodemesa.modelos.Rol;

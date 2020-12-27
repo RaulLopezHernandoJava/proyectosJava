@@ -1,4 +1,4 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.DaoMySql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,16 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.juegodemesa.accesodatos.AccesoDatosException;
+import com.juegodemesa.accesodatos.Daos.Dao;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mecanica;
 
 public class JuegosDaoMySql implements Dao<Juego> {
+
+	private static final Logger LOGGER = Logger.getLogger(JuegosDaoMySql.class.getName());
 
 	private DataSource dataSource;
 
@@ -84,13 +90,14 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			while (rs.next()) {
 				mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"), rs.getString("m.descripcion"));
 				juego = new Juego(rs.getLong("id"), rs.getString("nombre"), rs.getString("autor"),
-						rs.getString("editorial"), mecanica, rs.getDouble("precio"), rs.getString("imagen"),
+						rs.getString("editorial"), mecanica, rs.getDouble("precio"),
 						rs.getDate("fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 				juegos.add(juego);
 			}
 
 			return juegos;
 		} catch (SQLException e) {
+
 			throw new AccesoDatosException("Ha habido un problema al obtener todos los registros de juegso", e);
 		}
 
@@ -116,7 +123,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
 							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 
 				}
@@ -139,7 +146,6 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			ps.setString(2, juego.getAutor());
 			ps.setString(3, juego.getEditorial());
 			ps.setLong(4, juego.getMecanica().getId());
-			ps.setString(5, juego.getImagen());
 			ps.setObject(6, juego.getFechaPublicacion());
 
 			int numeroRegistrosInsertados = ps.executeUpdate();
@@ -165,7 +171,6 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			ps.setString(2, juego.getAutor());
 			ps.setString(3, juego.getEditorial());
 			ps.setLong(4, juego.getMecanica().getId());
-			ps.setString(5, juego.getImagen());
 			ps.setObject(6, juego.getFechaPublicacion());
 			ps.setLong(7, juego.getId());
 
@@ -178,6 +183,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Ha habido un problema al modificar el juego", e);
 			throw new AccesoDatosException("Ha habido un problema al modificar el juego", e);
 		}
 	}
@@ -198,6 +204,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Ha habido un problema al borrar el juego", e);
 			throw new AccesoDatosException("Ha habido un problema al obtener el juego cuyo id es " + id, e);
 		}
 	}
@@ -216,13 +223,12 @@ public class JuegosDaoMySql implements Dao<Juego> {
 
 				Juego juego = null;
 				Mecanica mecanica = null;
-
 				if (rs.next()) {
 
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
 							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 					juegos.add(juego);
 
@@ -258,7 +264,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
 							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 					juegos.add(juego);
 				}
@@ -296,7 +302,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
 							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 					juegos.add(juego);
 				}
@@ -333,7 +339,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"), rs.getString("j.imagen"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
 							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
 					juegos.add(juego);
 				}

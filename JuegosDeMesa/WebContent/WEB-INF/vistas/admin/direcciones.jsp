@@ -24,8 +24,8 @@
 				<td>${direccion.apellidos}</td>
 				<td>${direccion.codigoPostal}</td>
 				<td>${direccion.ciudad}</td>
-				<td>${direccion.comunidadAutonoma}</td>
-				<td>${direccion.provincia}</td>
+				<td>${direccion.comunidadAutonoma.nombre}</td>
+				<td>${direccion.provincia.nombre}</td>
 				<td>${direccion.telefono}</td>
 				<td>${direccion.email}</td>
 			</tr>

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import com.juegodemesa.accesodatos.UsuariosDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.UsuariosDaoMySql;
 import com.juegodemesa.modelos.Usuario;
 
 @WebServlet("/login") //{"/", "/login"})

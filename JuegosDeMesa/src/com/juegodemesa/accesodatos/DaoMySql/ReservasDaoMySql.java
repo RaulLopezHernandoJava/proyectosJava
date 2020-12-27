@@ -1,4 +1,4 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.DaoMySql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,18 +7,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.juegodemesa.accesodatos.AccesoDatosException;
+import com.juegodemesa.accesodatos.Daos.DaoReserva;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Reserva;
 import com.juegodemesa.modelos.Usuario;
 
 public class ReservasDaoMySql implements DaoReserva {
 
+	private static final Logger LOGGER = Logger.getLogger(ReservasDaoMySql.class.getName());
+	
 	// SINGLETON
 	private DataSource dataSource;
 
@@ -169,6 +175,7 @@ public class ReservasDaoMySql implements DaoReserva {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Ha habido un problema al borrar la reserva", e);
 			throw new AccesoDatosException("Ha habido un problema al obtner la reserva cuyo id es " + idReserva, e);
 		}
 

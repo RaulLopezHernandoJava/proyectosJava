@@ -55,7 +55,8 @@
 				<div class="col-sm-10">
 					<select class="custom-select" id="mecanica" name="mecanica">
 						<c:forEach items="${mecanicas}" var="mecanica">
-							<option value="${mecanica.id}" ${juego.mecanica.id == mecanica.id ? 'selected' : '' }>${mecanica.nombre}</option>
+							<option value="${mecanica.id}"
+								${juego.mecanica.id == mecanica.id ? 'selected' : '' }>${mecanica.nombre}</option>
 						</c:forEach>
 					</select>
 				</div>
@@ -64,12 +65,12 @@
 			<div class="form-group row">
 				<label for="imagen" class="col-sm-2 col-form-label">Imagen</label>
 				<div class="col-sm-10">
-					<input type="text"
-						class="form-control ${juego.errorImagen != null ? 'is-invalid' : '' }"
-						id="imagen" name="imagen"
-						placeholder="Inserta la url de la imagen del juego"
-						value="${juego.imagen}">
-					<div class="invalid-feedback">${juego.errorImagen}</div>
+					<div class="custom-file">
+						<input type="file" class="custom-file-input"
+							id="customFileLangHTML" name="imagen"> <label
+							class="custom-file-label" for="customFileLangHTML"
+							data-browse="Elegir Imagen">Selecciona un archivo</label>
+					</div>
 				</div>
 			</div>
 
@@ -84,14 +85,13 @@
 					<div class="invalid-feedback">${juego.errorFechaPublicacion}</div>
 				</div>
 			</div>
-			
+
 			<div class="form-group row">
 				<label for="precio" class="col-m-2 col-form-label">Precio</label>
 				<div class="col-sm-10">
 					<input type="number"
 						class="form-control ${juego.errorPrecio != null ? 'is-invalid' : '' }"
-						id="precio" name="precio"
-						value="${juego.precio}">
+						id="precio" name="precio" value="${juego.precio}">
 					<div class="invalid-feedback">${juego.precio}</div>
 				</div>
 			</div>

@@ -1,4 +1,6 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.Daos;
+
+import com.juegodemesa.accesodatos.AccesoDatosException;
 
 //IMPLEMENTACION BASICA DE Dao
 

@@ -1,54 +1,53 @@
-package com.juegodemesa.controladores;
+package com.juegodemesa.controladores.Juego;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.juegodemesa.accesodatos.AccesoDatosException;
+import com.juegodemesa.accesodatos.MetodosUtilidades.UtilidadesJuego;
+import com.juegodemesa.controladores.Configuracion;
 import com.juegodemesa.modelos.Juego;
-import com.juegodemesa.modelos.Mecanica;
 import com.juegodemesa.modelos.Mensaje;
 
 @WebServlet("/admin/guardar")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class JuegoGuardarServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private static final String UPLOAD_DIRECTORY = "imgs-juegos";
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Cambiar la codificación a la hora de leer todos los parámetros a UTF8
-		// request.setCharacterEncoding("utf8");
 
-		// 1. Recepción de parámetros
-		String id = request.getParameter("id");
-		String nombre = request.getParameter("nombre");
-		String autor = request.getParameter("autor");
-		String editorial = request.getParameter("editorial");
-		String mecanicaTexto = request.getParameter("mecanica");
-		String precio = request.getParameter("precio");
-		String imagen = request.getParameter("imagen");
-		String fechaPublicacion = request.getParameter("fecha-publicacion");
+		Juego juego = UtilidadesJuego.formularioJuego(request);
 
-		// 2. Empaquetar en objeto del modelo (entidad)
+		String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
+		File uploadDir = new File(uploadPath);
+		if (!uploadDir.exists())
+			uploadDir.mkdir();
 
-		Long mecanicaId = Long.parseLong(mecanicaTexto);
+		String fileName;
 
-		Mecanica mecanica = Configuracion.daoMecanica.obtenerPorId(mecanicaId);
+		Part part = request.getPart("foto");
 
-		Juego juego = new Juego(id, nombre, autor, editorial, mecanica, precio, imagen,
-				fechaPublicacion);
+		fileName = part.getSubmittedFileName();
+
+		String fichero = uploadPath + File.separator + juego.getId() + ".jpg";
+		part.write(fichero);
+
 		Mensaje mensaje = new Mensaje();
 
-		// 3. Tomar decisiones en base a los datos recibidos
-
 		if (!juego.isCorrecto()) {
-			request.setAttribute("juego", juego);
-			request.getRequestDispatcher("/WEB-INF/vistas/admin/juego.jsp").forward(request, response);
-			return;
+			UtilidadesJuego.redireccionarFormularioJuego(request, response, juego);
 		}
 
 		String op = null;
@@ -76,14 +75,16 @@ public class JuegoGuardarServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		// 4. Preparar el modelo para la siguiente pantalla
+		// 5. Preparar el modelo para la siguiente pantalla
 		HttpSession session = request.getSession();
 
 		session.setAttribute("alertamensaje", mensaje.getTextoMensaje());
 		session.setAttribute("alertatipo", mensaje.getTipoMensaje());
 
-		// 5. Redireccionar a la siguiente pantalla
+		// 6.. Redireccionar a la siguiente pantalla
 		response.sendRedirect(request.getContextPath() + "/admin/listado");
 	}
+
+
 
 }

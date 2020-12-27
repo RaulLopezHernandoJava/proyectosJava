@@ -1,4 +1,4 @@
-package com.juegodemesa.controladores;
+package com.juegodemesa.controladores.Juego;
 
 import java.io.IOException;
 
@@ -9,31 +9,33 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.juegodemesa.accesodatos.UsuariosDaoMySql;
 import com.juegodemesa.controladores.*;
 import com.juegodemesa.modelos.Juego;
-import com.juegodemesa.modelos.Usuario;
 
-@WebServlet("/user/datosUsuario")
-
-public class UsuarioServlet extends HttpServlet {
+@WebServlet("/admin/juego")
+/**
+ * Servlet para el mantenimiento de una juego, facilitando las operaciones CRUD básicas
+ */
+public class JuegoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	/**
-	 * Visualización de la pantalla de detalles del usuario
+	 * Visualización de la pantalla de detalles del juego
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String sId = request.getParameter("id");
 		
-		String email  = request.getSession().getAttribute("email").toString();
-		
-		if(email != null) {
-		
-			Usuario usuario = UsuariosDaoMySql.getInstancia().obtenerPorEmail(email);
+		if(sId != null) {
+			Long id = Long.parseLong(sId);
+			Juego juego = Configuracion.dao.obtenerPorId(id);
+			System.out.println(juego);
 			
-			request.setAttribute("usuario", usuario);
+			request.setAttribute("juego", juego);
 		}
 		
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/vistas/usuario.jsp");
+		request.setAttribute("mecanicas", Configuracion.daoMecanica.obtenerTodos());
+		
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/vistas/admin/juego.jsp");
 		requestDispatcher.forward(request, response);
 	}
 	

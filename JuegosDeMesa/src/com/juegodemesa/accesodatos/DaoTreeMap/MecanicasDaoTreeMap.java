@@ -1,7 +1,8 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.DaoTreeMap;
 
 import java.util.TreeMap;
 
+import com.juegodemesa.accesodatos.Daos.Dao;
 import com.juegodemesa.modelos.Mecanica;
 
 

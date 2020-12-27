@@ -1,25 +1,27 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.DaoMySql;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.juegodemesa.controladores.Configuracion;
-import com.juegodemesa.modelos.Juego;
-import com.juegodemesa.modelos.Mecanica;
+import com.juegodemesa.accesodatos.AccesoDatosException;
+import com.juegodemesa.accesodatos.Daos.DaoUsuario;
 import com.juegodemesa.modelos.Rol;
 import com.juegodemesa.modelos.Usuario;
 
 public class UsuariosDaoMySql implements DaoUsuario {
+	
+	private static final Logger LOGGER = Logger.getLogger(UsuariosDaoMySql.class.getName());
 
 	private DataSource dataSource;
 	// SINGLETON
@@ -181,6 +183,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Ha habido un problema al modificar el usuario", e);
 			throw new AccesoDatosException("Ha habido un problema al modificar a el usuario", e);
 		}
 	}
@@ -202,6 +205,7 @@ public class UsuariosDaoMySql implements DaoUsuario {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Ha habido un problema al borrar el juego", e);
 			throw new AccesoDatosException("Ha habido un problema al obtener a el usuario cuyo id es " + id, e);
 		}
 	}

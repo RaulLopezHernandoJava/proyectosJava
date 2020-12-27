@@ -1,39 +1,34 @@
-package com.juegodemesa.controladores;
+package com.juegodemesa.controladores.Usuario;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.juegodemesa.accesodatos.AccesoDatosException;
+import com.juegodemesa.controladores.Configuracion;
 
-@WebServlet("/user/BorrarReserva")
-public class ReservaBorrarServlet extends HttpServlet {
+@WebServlet("/admin/borrarUsuario")
+public class UsuarioBorrarServlet {
 	private static final long serialVersionUID = 1L;
-
-    public ReservaBorrarServlet() {
-    }
-
-
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String sId = request.getParameter("id");
 		
-	String sId = request.getParameter("id");
-	System.out.println("Recojo el parametro para borrar" + sId);
-		
-		Long idReserva = Long.parseLong(sId);
+		Long id = Long.parseLong(sId);
 		
 		String alertaMensaje, alertaTipo;
 		
 		try {
-			Configuracion.daoReserva.borrarReserva(idReserva);
+			Configuracion.dao.borrar(id);
 			
-			alertaMensaje = "Reserva" + idReserva + " borrada correctamente";
+			alertaMensaje = "Registro " + id + " borrado correctamente";
 			alertaTipo = "success";
 		} catch (AccesoDatosException e) {
-			alertaMensaje = "La reserva  a borrar no existe";
+			alertaMensaje = "El registro a borrar no existe";
 			alertaTipo = "warning";
 		}
 		
@@ -42,11 +37,10 @@ public class ReservaBorrarServlet extends HttpServlet {
 		session.setAttribute("alertatipo", alertaTipo);
 		session.setAttribute("alertamensaje", alertaMensaje);
 		
-		response.sendRedirect(request.getContextPath() + "/user/reservasCarrito");
+		response.sendRedirect(request.getContextPath() + "/admin/listadoUsuarios");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 }

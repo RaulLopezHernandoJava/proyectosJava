@@ -1,4 +1,4 @@
-package com.juegodemesa.controladores;
+package com.juegodemesa.controladores.Juego;
 
 import java.io.IOException;
 
@@ -7,6 +7,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.juegodemesa.controladores.Configuracion;
 
 @WebServlet("/admin/listado")
 public class JuegosServlet extends HttpServlet {

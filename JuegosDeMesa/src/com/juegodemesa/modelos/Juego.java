@@ -4,64 +4,56 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Juego {
-	
+
 	private Long id;
-	private String nombre, autor, editorial, imagen;
+	private String nombre, autor, editorial;
 	private Double precio;
 	private Mecanica mecanica;
 	private LocalDate fechaPublicacion;
 	private Boolean active;
-	
-	
-	private boolean correcto = true;
-	
-	private String errorId, errorNombre, errorAutor, errorEditorial, errorMecanica , errorPrecio, errorImagen, errorFechaPublicacion,errorActive;
-	
-	
-	
-	// Constructor por Defecto
-	
-	
-	// Constructor con todos los argumentos con sus valores que hemos definido previamente
 
-	public Juego(Long id, String nombre, String autor, String editorial, Mecanica mecanica 
-			,Double precio ,String imagen, LocalDate fechaPublicacion,Boolean active) {
-		
+	private boolean correcto = true;
+
+	private String errorId, errorNombre, errorAutor, errorEditorial, errorMecanica, errorPrecio, errorFechaPublicacion,
+			errorActive;
+
+	// Constructor por Defecto
+
+	// Constructor con todos los argumentos con sus valores que hemos definido
+	// previamente
+
+	public Juego(Long id, String nombre, String autor, String editorial, Mecanica mecanica, Double precio,
+			LocalDate fechaPublicacion, Boolean active) {
+
 		setId(id);
 		setNombre(nombre);
 		setAutor(autor);
 		setEditorial(editorial);
 		setMecanica(mecanica);
 		setPrecio(precio);
-		setImagen(imagen);
 		setFechaPublicacion(fechaPublicacion);
 		setActive(active);
-		
+
 	}
-	
+
 	// Constructor para construir objetos todo String
-	
-	public Juego(String id, String nombre, String autor, String editorial, Mecanica mecanica , String precio,String imagen, String fechaPublicacion) {
+
+	public Juego(String id, String nombre, String autor, String editorial, Mecanica mecanica, String precio,
+			String fechaPublicacion) {
 		setId(id);
 		setNombre(nombre);
 		setAutor(autor);
 		setEditorial(editorial);
 		setMecanica(mecanica);
 		setPrecio(precio);
-		setImagen(imagen);
 		setFechaPublicacion(fechaPublicacion);
-		
+
 	}
 
-
-	public Juego(String nombre, int precio,String imagen) {
+	public Juego(String nombre, int precio, String imagen) {
 		setNombre(nombre);
 		setPrecio(precio);
-		setImagen(imagen);
-
 	}
-	
-	
 
 	public Long getId() {
 		return id;
@@ -71,7 +63,6 @@ public class Juego {
 
 		this.id = id;
 	}
-	
 
 	public void setId(String id) {
 		Long juegoId;
@@ -83,69 +74,42 @@ public class Juego {
 		}
 	}
 
-
-
-
-
 	public String getNombre() {
 		return nombre;
 	}
 
-
-
-
-
 	public void setNombre(String nombre) {
-		if(nombre == null || nombre.trim().length() < 3) {
+		if (nombre == null || nombre.trim().length() < 3) {
 			setErrorNombre("No se admiten títulos de menos de 3 caracteres");
 		}
-	
+
 		this.nombre = nombre;
 	}
-
-
-
-
 
 	public String getAutor() {
 		return autor;
 	}
 
-
-
-
-
 	public void setAutor(String autor) {
-		if(autor == null || autor.trim().length() < 3) {
+		if (autor == null || autor.trim().length() < 3) {
 			setErrorAutor("No se admiten títulos de menos de 3 caracteres");
 		}
-	
+
 		this.autor = autor;
 	}
-
-
-
-
 
 	public String getEditorial() {
 		return editorial;
 	}
 
-
-
-
-
 	public void setEditorial(String editorial) {
-		if(editorial == null || editorial.trim().length() < 3) {
+		if (editorial == null || editorial.trim().length() < 3) {
 			setErrorEditorial("El nombre de la editorial tiene que tener una longitud mayor a 3 caracteres");
 		}
-		
+
 		this.editorial = editorial;
 	}
-	
-	
-	
-	
+
 	public Mecanica getMecanica() {
 		return mecanica;
 	}
@@ -153,8 +117,6 @@ public class Juego {
 	public void setMecanica(Mecanica mecanica) {
 		this.mecanica = mecanica;
 	}
-	
-
 
 	public Double getPrecio() {
 		return precio;
@@ -163,21 +125,20 @@ public class Juego {
 	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
-	
 
 	public void setPrecio(int precio) {
-		
+
 		Double juegoPrecio;
 		try {
-			juegoPrecio =  Double.valueOf(precio);
+			juegoPrecio = Double.valueOf(precio);
 			setPrecio(juegoPrecio);
 		} catch (NumberFormatException e) {
 			setErrorId("El precio debe de ser numerio");
 		}
 	}
-	
-	public void setPrecio (String precio) {
-		
+
+	public void setPrecio(String precio) {
+
 		Double juegoPrecio;
 		try {
 			juegoPrecio = precio.length() == 0 ? null : Double.parseDouble(precio);
@@ -186,31 +147,18 @@ public class Juego {
 			setErrorId("El precio debe de ser numerio");
 		}
 	}
-	
-	
-	public String getImagen() {
-		return imagen;
-	}
-
-
-	public void setImagen(String imagen) {
-	
-		this.imagen = imagen;
-	}
-	
 
 	public LocalDate getFechaPublicacion() {
 		return fechaPublicacion;
 	}
 
-
 	public void setFechaPublicacion(LocalDate fechaPublicacion) {
-	
+
 		this.fechaPublicacion = fechaPublicacion;
 	}
-	
+
 	public void setFechaPublicacion(String fechaPublicacion) {
-		
+
 		LocalDate juegoFechaPublicacion;
 		try {
 			juegoFechaPublicacion = LocalDate.parse(fechaPublicacion, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -219,7 +167,7 @@ public class Juego {
 			setErrorFechaPublicacion("La fecha debe tener un formato 1234-12-12");
 		}
 	}
-	
+
 	public Boolean getActive() {
 		return active;
 	}
@@ -227,9 +175,6 @@ public class Juego {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	
-	
 
 	public boolean isCorrecto() {
 		return correcto;
@@ -239,107 +184,65 @@ public class Juego {
 		this.correcto = correcto;
 	}
 
-
-
-
-
 	public String getErrorId() {
 		return errorId;
 	}
-
-
-
-
 
 	public void setErrorId(String errorId) {
 		correcto = false;
 		this.errorId = errorId;
 	}
 
-
-
-
-
 	public String getErrorNombre() {
 		return errorNombre;
 	}
-
-
 
 	public void setErrorNombre(String errorNombre) {
 		correcto = false;
 		this.errorNombre = errorNombre;
 	}
 
-
-
-
-
 	public String getErrorAutor() {
 		return errorAutor;
 	}
-
-
-
-
 
 	public void setErrorAutor(String errorAutor) {
 		correcto = false;
 		this.errorAutor = errorAutor;
 	}
 
-
-
-
-
 	public String getErrorEditorial() {
 		return errorEditorial;
 	}
-
-
 
 	public void setErrorEditorial(String errorEditorial) {
 		correcto = false;
 		this.errorEditorial = errorEditorial;
 	}
-	
+
 	public String getErrorMecanica() {
 		return errorMecanica;
 	}
-	
+
 	public void setErrorMecanica(String errorMecanica) {
 		correcto = false;
 		this.errorMecanica = errorMecanica;
-		
+
 	}
-	
-	
+
 	public String getErrorPrecio() {
 		return errorPrecio;
 	}
-	
+
 	public void setErrorPrecio(String errorPrecio) {
 		correcto = false;
 		this.errorPrecio = errorPrecio;
-		
+
 	}
-
-	public String getErrorImagen() {
-		return errorImagen;
-	}
-
-
-	public void setErrorImagen(String errorImagen) {
-		correcto = false;
-		this.errorImagen = errorImagen;
-	}
-
 
 	public String getErrorFechaPublicacion() {
 		return errorFechaPublicacion;
 	}
-	
-	
 
 	public void setErrorFechaPublicacion(String errorFechaPublicacion) {
 		correcto = false;
@@ -354,20 +257,22 @@ public class Juego {
 		correcto = false;
 		this.errorActive = errorActive;
 	}
-	
-	
 
+	
+	// hashCode() and equals()
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
 		result = prime * result + ((autor == null) ? 0 : autor.hashCode());
 		result = prime * result + ((editorial == null) ? 0 : editorial.hashCode());
 		result = prime * result + ((fechaPublicacion == null) ? 0 : fechaPublicacion.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((imagen == null) ? 0 : imagen.hashCode());
 		result = prime * result + ((mecanica == null) ? 0 : mecanica.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + ((precio == null) ? 0 : precio.hashCode());
 		return result;
 	}
 
@@ -380,6 +285,11 @@ public class Juego {
 		if (getClass() != obj.getClass())
 			return false;
 		Juego other = (Juego) obj;
+		if (active == null) {
+			if (other.active != null)
+				return false;
+		} else if (!active.equals(other.active))
+			return false;
 		if (autor == null) {
 			if (other.autor != null)
 				return false;
@@ -400,11 +310,6 @@ public class Juego {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (imagen == null) {
-			if (other.imagen != null)
-				return false;
-		} else if (!imagen.equals(other.imagen))
-			return false;
 		if (mecanica == null) {
 			if (other.mecanica != null)
 				return false;
@@ -415,14 +320,25 @@ public class Juego {
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
+		if (precio == null) {
+			if (other.precio != null)
+				return false;
+		} else if (!precio.equals(other.precio))
+			return false;
 		return true;
 	}
 
+	
+	
+	// toString()
+	
 	@Override
 	public String toString() {
-		return "Juego [id=" + id + ", nombre=" + nombre + ", autor=" + autor + ", editorial=" + editorial + ", imagen="
-				+ imagen + ", mecanica=" + mecanica + ", fechaPublicacion=" + fechaPublicacion + "]";
+		return "Juego [id=" + id + ", nombre=" + nombre + ", autor=" + autor + ", editorial=" + editorial + ", precio="
+				+ precio + ", mecanica=" + mecanica + ", fechaPublicacion=" + fechaPublicacion + ", active=" + active
+				+ "]";
 	}
-
 	
+	
+
 }

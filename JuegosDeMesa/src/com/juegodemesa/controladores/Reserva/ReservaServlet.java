@@ -1,4 +1,4 @@
-package com.juegodemesa.controladores;
+package com.juegodemesa.controladores.Reserva;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.juegodemesa.accesodatos.AccesoDatosException;
-import com.juegodemesa.accesodatos.UsuariosDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.UsuariosDaoMySql;
+import com.juegodemesa.controladores.Configuracion;
 import com.juegodemesa.modelos.Juego;
 import com.juegodemesa.modelos.Mensaje;
 import com.juegodemesa.modelos.Usuario;

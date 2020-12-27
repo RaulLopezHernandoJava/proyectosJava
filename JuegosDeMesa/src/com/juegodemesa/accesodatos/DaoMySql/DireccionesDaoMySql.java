@@ -1,4 +1,4 @@
-package com.juegodemesa.accesodatos;
+package com.juegodemesa.accesodatos.DaoMySql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,17 +6,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.juegodemesa.accesodatos.AccesoDatosException;
+import com.juegodemesa.accesodatos.Daos.Dao;
+import com.juegodemesa.accesodatos.Daos.DaoDireccion;
 import com.juegodemesa.modelos.ComunidadAutonoma;
 import com.juegodemesa.modelos.Direccion;
 import com.juegodemesa.modelos.Provincia;
 
 public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
+
+	// Implementamos "Logger" para recibir avisios en la consola del servidor ante X
+	// eventos que queramos monitorizar
+	// Ejemplo Actualizaciones, Eliminaciones, Inserciones ...
+
+	private static final Logger LOGGER = Logger.getLogger(DireccionesDaoMySql.class.getName());
 
 	private DataSource dataSource;
 
@@ -40,11 +51,11 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 //	private static final String SQL_SELECT_ID = "SELECT * FROM usuarios j JOIN roles r ON u.id_rol = r.id WHERE u.id = ?";
 	private static final String SQL_SELECT_PROVINCIA = "SELECT * FROM provincias p WHERE p.nombre = ?";
 	private static final String SQL_SELECT_COMUNIDAD = "SELECT * FROM comunidadesAutonomas c WHERE c.nombre = ?";
-	private static final String SQL_SELECT_DIRECCION = "SELECT * FROM direcciones d JOIN provincias p ON d.id_provincia = p.id JOIN comunidadesAutonomas c ON d.id_comunidad = c.id WHERE d.email = ?";
+	private static final String SQL_SELECT_DIRECCION = "SELECT * FROM direcciones d JOIN provincias p ON d.id_provincia = p.id JOIN comunidadesAutonomas c ON p.id_comunidad = c.id  WHERE d.email = ?";
 //	private static final String SQL_SELECT_PASSWORD = "SELECT u.password FROM usuarios u WHERE u.email = ?";
 	private static final String SQL_INSERT = "INSERT INTO direcciones (nombre,apellidos,direccion,codigo_postal,ciudad,telefono,email,id_usuario,id_provincia,id_comunidad,active ) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
-	private static final String SQL_UPDATE = "UPDATE direcciones SET nombre = ?, apellidos = ?, direccion= ? , codigo_postal = ? , ciudad = ? ,"
-			+ " telefono = ?, email=?, id_usuario =?, id_comunidad = ?,id_provincia =? , active =? WHERE id = ?";
+	private static final String SQL_UPDATE = "UPDATE direcciones d  SET d.nombre = ?, d.apellidos = ?, d.direccion= ? , d.codigo_postal = ? , d.ciudad = ? , d.telefono = ? , d.email=? ,d.id_usuario=?, d.id_provincia=? ,d.id_comunidad=?, d.active=? WHERE id = ?";
+			
 //	private static final String SQL_DELETE = "DELETE FROM usuarios WHERE id = ?";
 
 	static {
@@ -64,13 +75,17 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 				ResultSet rs = s.executeQuery(SQL_SELECT);) {
 			ArrayList<Direccion> direcciones = new ArrayList<>();
 
+			ComunidadAutonoma comunidadAutonoma;
+			Provincia provincia;
 			Direccion direccion;
 
 			while (rs.next()) {
+				comunidadAutonoma = new ComunidadAutonoma(rs.getLong("c.id"), rs.getString("c.nombre"));
+				provincia = new Provincia(rs.getLong("p.id"), rs.getString("p.nombre"), rs.getLong("p.idComunidad"));
 				direccion = new Direccion(rs.getLong("id"), rs.getString("nombre"), rs.getString("apellidos"),
 						rs.getString("direccion"), rs.getInt("codigo_postal"), rs.getString("ciudad"),
-						rs.getLong("id_comunidad"), rs.getLong("id_provincia"), rs.getString("telefono"),
-						rs.getString("email"), rs.getLong("id_usuario"), rs.getBoolean("active"));
+						comunidadAutonoma, provincia, rs.getString("telefono"), rs.getString("email"),
+						rs.getLong("id_usuario"), rs.getBoolean("active"));
 
 				direcciones.add(direccion);
 			}
@@ -86,7 +101,8 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 
 	public void insertar(Direccion direccion) {
 		try (Connection con = dataSource.getConnection(); PreparedStatement ps = con.prepareStatement(SQL_INSERT);) {
-
+			
+			System.out.println("Direccion en modificar" + direccion);
 			ps.setString(1, direccion.getNombre());
 			ps.setString(2, direccion.getApellidos());
 			ps.setString(3, direccion.getDireccion());
@@ -98,6 +114,7 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 			ps.setLong(9, direccion.getProvincia().getId());
 			ps.setLong(10, direccion.getComunidadAutonoma().getId());
 			ps.setBoolean(11, direccion.getActive());
+			ps.setLong(12,direccion.getId());
 
 			int numeroRegistrosInsertados = ps.executeUpdate();
 
@@ -128,8 +145,8 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 			ps.setString(6, direccion.getTelefono());
 			ps.setString(7, direccion.getEmail());
 			ps.setLong(8, direccion.getIdUsuario());
-			ps.setLong(9, direccion.getComunidadAutonoma());
-			ps.setLong(10, direccion.getProvincia());
+			ps.setLong(9, direccion.getComunidadAutonoma().getId());
+			ps.setLong(10, direccion.getProvincia().getId());
 			ps.setBoolean(11, direccion.getActive());
 			ps.setLong(12, direccion.getId());
 
@@ -142,6 +159,7 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Ha habido un problema al modificar el juego", e);
 			throw new AccesoDatosException("Ha habido un problema al modificar al modificar la direccion", e);
 		}
 	}
@@ -154,14 +172,18 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 			ps.setString(1, email);
 
 			try (ResultSet rs = ps.executeQuery()) {
-
+				ComunidadAutonoma comunidadAutonoma = null;
+				Provincia provincia = null;
 				Direccion direccion = null;
 
 				if (rs.next()) {
+					comunidadAutonoma = new ComunidadAutonoma(rs.getLong("c.id"), rs.getString("c.nombre"));
+					provincia = new Provincia(rs.getLong("p.id"), rs.getString("p.nombre"),
+							rs.getLong("p.id_comunidad"));
 					direccion = new Direccion(rs.getLong("d.id"), rs.getString("d.nombre"), rs.getString("d.apellidos"),
 							rs.getString("d.direccion"), rs.getInt("d.codigo_postal"), rs.getString("d.ciudad"),
-							rs.getLong("d.id_comunidad"), rs.getLong("d.id_provincia"), rs.getString("d.telefono"),
-							rs.getString("d.email"), rs.getLong("d.id_usuario"), rs.getBoolean("d.active"));
+							comunidadAutonoma, provincia, rs.getString("d.telefono"), rs.getString("d.email"),
+							rs.getLong("id_usuario"), rs.getBoolean("active"));
 				}
 
 				System.out.println(direccion);
@@ -175,12 +197,12 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 	}
 
 	@Override
-	public Provincia obtenerProvinciaPorId(Long idProvincia) {
+	public Provincia obtenerProvinciaPorNombre(String nombreProvincia) {
 
 		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_PROVINCIA);) {
 
-			ps.setLong(1, idProvincia);
+			ps.setString(1, nombreProvincia);
 
 			try (ResultSet rs = ps.executeQuery()) {
 
@@ -192,24 +214,23 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 
 				}
 
-				System.out.println(provincia);
-
 				return provincia;
 			}
 		} catch (SQLException e) {
 			throw new AccesoDatosException(
-					"Ha habido un problema al obtener la provincia de la direccion cuyo id es " + idProvincia, e);
+					"Ha habido un problema al obtener la provincia de la direccion cuyo nombre es " + nombreProvincia,
+					e);
 		}
 
 	}
 
 	@Override
-	public ComunidadAutonoma obtenerComunidadAutonomaPorId(Long idComunidad) {
+	public ComunidadAutonoma obtenerComunidadAutonomaPorNombre(String nombreComunidad) {
 
 		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_COMUNIDAD);) {
 
-			ps.setLong(1, idComunidad);
+			ps.setString(1, nombreComunidad);
 
 			try (ResultSet rs = ps.executeQuery()) {
 
@@ -220,14 +241,12 @@ public class DireccionesDaoMySql implements DaoDireccion, Dao<Direccion> {
 
 				}
 
-				System.out.println(comunidadAutonoma);
-
 				return comunidadAutonoma;
 			}
 		} catch (SQLException e) {
 			throw new AccesoDatosException(
-					"Ha habido un problema al obtener el nombre de la comunidad autonoma de la direccion cuyo id es "
-							+ idComunidad,
+					"Ha habido un problema al obtener  la comunidad autonoma de la direccion cuyo nombre es "
+							+ nombreComunidad,
 					e);
 		}
 

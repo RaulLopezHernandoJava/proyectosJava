@@ -45,10 +45,10 @@
 			<div class="form-group row">
 				<label for="comunidad" class="col-sm-2 col-form-label">Comunidad Autonoma</label>
 				<div class="col-sm-10">
-					<input type="number"
+					<input type="text"
 						class="form-control ${direccion.errorComunidadAutonoma != null ? 'is-invalid' : '' }"
 						id="comunidad" name="comunidad" placeholder="Inserte su comunidad autonoma ... "
-						value="${direccion.comunidadAutonoma}">
+						value="${direccion.comunidadAutonoma.nombre}">
 					<div class="invalid-feedback">${direccion.errorComunidadAutonoma}</div>
 				</div>
 			</div>
@@ -57,10 +57,10 @@
 			<div class="form-group row">
 				<label for="provincia" clasS="col-sm-2 col-form-label">Provincia</label>
 				<div class="col-sm-10">
-					<input type="number"
+					<input type="text"
 						class="form-control ${direccion.errorProvincia != null ? 'is-invalid' : '' }"
-						id="provincia" name="provincia" placeholder="Inserte sus apellidos ... "
-						value="${direccion.provincia}">
+						id="provincia" name="provincia" placeholder="Inserte su provincia ... "
+						value="${direccion.provincia.nombre}">
 					<div class="invalid-feedback">${direccion.errorProvincia}</div>
 				</div>
 			</div>

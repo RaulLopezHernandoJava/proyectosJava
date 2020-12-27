@@ -9,8 +9,8 @@ public class Direccion {
 	private String ciudad;
 	private String telefono;
 	private String email;
-	private Long provincia;
-	private Long comunidadAutonoma;
+	private ComunidadAutonoma comunidadAutonoma;
+	private Provincia provincia;
 	private Long idUsuario;
 	private Boolean active;
 	
@@ -25,7 +25,7 @@ public class Direccion {
 	// Constructores
 
 	public Direccion(Long id, String nombre, String apellidos, String direccion, Integer codigoPostal,
-			String ciudad, Long comunidadAutonoma, Long provincia, String telefono, String email, Long idUsuario,Boolean active) {
+			String ciudad, ComunidadAutonoma comunidadAutonoma, Provincia provincia, String telefono, String email, Long idUsuario,Boolean active) {
 		setId(id);
 		setNombre(nombre);
 		setApellidos(apellidos);
@@ -42,7 +42,7 @@ public class Direccion {
 	
 	
 	public Direccion(String id, String nombre, String apellidos, String direccion, Integer codigoPostal,
-					String ciudad,Long comunidadAutonoma,Long provincia, String telefono,String email, String idUsuario) {
+					String ciudad,ComunidadAutonoma comunidadAutonoma,Provincia provincia, String telefono,String email, String idUsuario) {
 		setId(id);
 		setNombre(nombre);
 		setApellidos(apellidos);
@@ -58,7 +58,7 @@ public class Direccion {
 	}
 	
 	public Direccion(String nombre, String apellidos,String direccion, String codigoPostal,
-			String ciudad, Long comunidadAutonoma, Long provincia, String telefono, String email) {
+			String ciudad, ComunidadAutonoma comunidadAutonoma, Provincia provincia, String telefono, String email) {
 		setNombre(nombre);
 		setApellidos(apellidos);
 		setDireccion(direccion);
@@ -71,7 +71,7 @@ public class Direccion {
 	}
 	
 	public Direccion(String nombre, String apellidos, String direccion, String codigoPostal, String ciudad,
-			String telefono, String email,  Long idUsuario, Long provinciaId, Long comunidadId, Boolean active) {
+			String telefono, String email,  Long idUsuario, Provincia provincia, ComunidadAutonoma comunidad, Boolean active) {
 		setNombre(nombre);
 		setApellidos(apellidos);
 		setDireccion(direccion);
@@ -80,13 +80,30 @@ public class Direccion {
 		setTelefono(telefono);
 		setEmail(email);
 		setIdUsuario(idUsuario);
-		setProvincia(provinciaId);
-		setComunidadAutonoma(comunidadId);
+		setProvincia(provincia);
+		setComunidadAutonoma(comunidad);
 		setActive(active);
 	}
 	
 	public Direccion(String id,String nombre, String apellidos, String direccion, String codigoPostal, String ciudad,
-			String telefono, String email,  Long idUsuario, Long provinciaId, Long comunidadId, Boolean active) {
+			String telefono, String email,  Long idUsuario, Provincia provincia, ComunidadAutonoma comunidad, Boolean active) {
+		setId(id);
+		setNombre(nombre);
+		setApellidos(apellidos);
+		setDireccion(direccion);
+		setCodigoPostal(codigoPostal);
+		setCiudad(ciudad);
+		setTelefono(telefono);
+		setEmail(email);
+		setIdUsuario(idUsuario);
+		setProvincia(provincia);
+		setComunidadAutonoma(comunidad);
+		setActive(active);
+	}
+	
+	public Direccion(String id, String nombre, String apellidos, String direccion, String codigoPostal,
+			String ciudad, String telefono, String email, Long idUsuario, Long provinciaId, Long comunidadId,
+			Boolean active) {
 		setId(id);
 		setNombre(nombre);
 		setApellidos(apellidos);
@@ -102,13 +119,17 @@ public class Direccion {
 	}
 	
 	
+	
+	
 	public Direccion() {
 	
 	}
 
 	
-	
 	// Getters y Setters
+
+
+
 
 
 
@@ -192,24 +213,44 @@ public class Direccion {
 	}
 
 	
-
-	public Long getComunidadAutonoma() {
+	public ComunidadAutonoma getComunidadAutonoma() {
 		return comunidadAutonoma;
 	}
 
 
-	public void setComunidadAutonoma(Long comunidadAutonoma) {
+	public void setComunidadAutonoma(ComunidadAutonoma comunidadAutonoma) {
 		this.comunidadAutonoma = comunidadAutonoma;
+	}
+	
+	public void setComunidadAutonoma(Long idComunidad) {
+		Long comunidadId;
+		try {
+			comunidadId = idComunidad.longValue() == 0 ? null : comunidadAutonoma.getId();
+			setComunidadAutonoma(comunidadId);
+		} catch (NumberFormatException e) {
+			setErrorId("El id de la provencia debe ser un long");
+		}
 	}
 
 
-	public Long getProvincia() {
+
+	public Provincia getProvincia() {
 		return provincia;
 	}
 
 
-	public void setProvincia(Long provincia) {
+	public void setProvincia(Provincia provincia) {
 		this.provincia = provincia;
+	}
+	
+	public void setProvincia(Long idProvincia) {
+		Long provinciaId;
+		try {
+			provinciaId = idProvincia.longValue() == 0 ? null : provincia.getId();
+			setProvincia(provinciaId);
+		} catch (NumberFormatException e) {
+			setErrorId("El id de la provencia debe ser un long");
+		}
 	}
 
 
@@ -407,8 +448,6 @@ public class Direccion {
 	}
 
 
-	
-
 	// HashCode() and Equals()
 	
 	
@@ -504,16 +543,16 @@ public class Direccion {
 		return true;
 	}
 
+	
+	// toString()
 
 	@Override
 	public String toString() {
 		return "Direccion [id=" + id + ", nombre=" + nombre + ", apellidos=" + apellidos + ", direccion=" + direccion
 				+ ", codigoPostal=" + codigoPostal + ", ciudad=" + ciudad + ", telefono=" + telefono + ", email="
-				+ email + ", provincia=" + provincia + ", comunidadAutonoma=" + comunidadAutonoma + ", idUsuario="
+				+ email + ", comunidadAutonoma=" + comunidadAutonoma + ", provincia=" + provincia + ", idUsuario="
 				+ idUsuario + ", active=" + active + "]";
 	}
-
-	
 
 	
 }

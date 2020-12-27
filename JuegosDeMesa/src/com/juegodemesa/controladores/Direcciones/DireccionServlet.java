@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.juegodemesa.accesodatos.DireccionesDaoMySql;
+import com.juegodemesa.accesodatos.DaoMySql.DireccionesDaoMySql;
 import com.juegodemesa.modelos.Direccion;
 
 @WebServlet("/user/datosDireccion")
@@ -27,6 +27,7 @@ public class DireccionServlet extends HttpServlet {
 		if(email != null) {
 		
 			Direccion direccion = DireccionesDaoMySql.getInstancia().obtenerPorEmail(email);
+
 			System.out.println("Mostrar direccion" + direccion);
 		
 			
