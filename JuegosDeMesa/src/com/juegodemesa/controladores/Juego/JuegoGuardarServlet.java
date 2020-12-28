@@ -37,7 +37,7 @@ public class JuegoGuardarServlet extends HttpServlet {
 
 		String fileName;
 
-		Part part = request.getPart("foto");
+		Part part = request.getPart("imagen");
 
 		fileName = part.getSubmittedFileName();
 

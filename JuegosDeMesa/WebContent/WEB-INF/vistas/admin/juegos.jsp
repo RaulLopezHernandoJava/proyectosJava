@@ -45,8 +45,8 @@
 			<!--  Zona de Formulario -->
 			<c:forEach items="${juegos}" var="juego">
 				<div class="card-img-top  tarjeta-juego" style="width: 20rem;">
-					<img class="img-fluid" src="${juego.imagen} " class="card-img-top"
-						alt="...">
+				<img src="imgs-juegos/${juego.id}.jpg" class="card-img-top" alt="">
+					
 					<div class="card-body">
 						<h5 class="card-title">${juego.nombre}</h5>
 						<h6 class="card-subtitle mb-2 text-muted">Autor

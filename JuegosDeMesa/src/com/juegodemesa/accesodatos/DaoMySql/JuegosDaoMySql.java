@@ -47,11 +47,13 @@ public class JuegosDaoMySql implements Dao<Juego> {
 	// Windows-1252 a UTF-8
 
 	private static final String SQL_SELECT = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.active = TRUE";
-	private static final String SQL_SELECT_ID = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.id = ? WHERE j.active=TRUE ";
-	private static final String SQL_SELECT_AUTOR = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.autor = ? WHERE j.active=TRUE";
-	private static final String SQL_SELECT_EDITORIAL = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.editorial = ? WHERE j.active=TRUE";
-	private static final String SQL_SELECT_MECHANIC = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE m.nombre = ? WHERE j.active = TRUE";
-	private static final String SQL_SELECT_PRICES = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio BETWEEN ? AND ? WHERE j.active = TRUE";
+	private static final String SQL_SELECT_ID = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.id = ? AND j.active=TRUE ";
+	private static final String SQL_SELECT_AUTOR = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.autor = ? AND j.active=TRUE";
+	private static final String SQL_SELECT_EDITORIAL = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE j.editorial = ? AND j.active=TRUE";
+	private static final String SQL_SELECT_MECHANIC = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica = m.id WHERE m.nombre = ? AND j.active = TRUE";
+	private static final String SQL_SELECT_MIN_PRICE = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio >= ? AND j.active = TRUE";
+	private static final String SQL_SELECT_MAX_PRICE = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio <= ? AND j.active = TRUE";
+	private static final String SQL_SELECT_PRICES = "SELECT * FROM juegos j JOIN mecanicas m ON j.id_mecanica WHERE j.precio BETWEEN ? AND ? AND j.active = TRUE";
 	private static final String SQL_INSERT = "INSERT INTO juegos (nombre, autor, editorial, id_mecanica, imagen, fecha_publicacion) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String SQL_UPDATE = "UPDATE juegos SET nombre = ?, autor = ?, editorial = ? , id_mecanica = ?, imagen = ? , fecha_publicacion = ? WHERE id = ?";
 	private static final String SQL_DELETE = "UPDATE juegos r SET active = FALSE where j.id = ?";
@@ -123,8 +125,8 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
-							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+							rs.getString("j.editorial"), mecanica, rs.getDouble("j.precio"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("j.active"));
 
 				}
 				System.out.println("Este es el metodo de obtener por Id" + juego);
@@ -228,8 +230,8 @@ public class JuegosDaoMySql implements Dao<Juego> {
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
 					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
-							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
-							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+							rs.getString("j.editorial"), mecanica, rs.getDouble("j.precio"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("j.active"));
 					juegos.add(juego);
 
 				}
@@ -259,7 +261,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 				Juego juego = null;
 				Mecanica mecanica = null;
 
-				if (rs.next()) {
+				while (rs.next()) {
 
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
@@ -297,7 +299,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 				Juego juego = null;
 				Mecanica mecanica = null;
 
-				if (rs.next()) {
+				while (rs.next()) {
 
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
@@ -318,9 +320,75 @@ public class JuegosDaoMySql implements Dao<Juego> {
 
 	}
 
-	// FILTRAR POR PRECIO
+	// FILTRAR POR PRECIO MINIMO
 
-	public Iterable<Juego> filtrarJuegosPrecio(Integer min, Integer max) {
+	public Iterable<Juego> filtrarJuegosPrecioMinimo(Integer min) {
+		try (Connection con = dataSource.getConnection();
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_MIN_PRICE);) {
+
+			ps.setInt(1, min);
+
+			ArrayList<Juego> juegos = new ArrayList<>();
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				Juego juego = null;
+				Mecanica mecanica = null;
+
+				while (rs.next()) {
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+					juegos.add(juego);
+				}
+
+				System.out.println("Estos son los juegos cuyo precio minimo es" + min  + " : " +  juegos);
+
+				return juegos;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtene los precios de los juegos", e);
+		}
+
+	}
+
+	public Iterable<Juego> filtrarJuegosPrecioMaximo(Integer max) {
+		try (Connection con = dataSource.getConnection();
+				PreparedStatement ps = con.prepareStatement(SQL_SELECT_MAX_PRICE);) {
+
+			ps.setInt(1, max);
+
+			ArrayList<Juego> juegos = new ArrayList<>();
+
+			try (ResultSet rs = ps.executeQuery()) {
+
+				Juego juego = null;
+				Mecanica mecanica = null;
+
+				while (rs.next()) {
+
+					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
+							rs.getString("m.descripcion"));
+					juego = new Juego(rs.getLong("j.id"), rs.getString("j.nombre"), rs.getString("j.autor"),
+							rs.getString("j.editorial"), mecanica, rs.getDouble("precio"),
+							rs.getDate("j.fecha_publicacion").toLocalDate(), rs.getBoolean("active"));
+					juegos.add(juego);
+				}
+
+				System.out.println("Estos son los juegos cuyo precio maximo es" + max  + " : " +  juegos);
+
+				return juegos;
+			}
+		} catch (SQLException e) {
+			throw new AccesoDatosException("Ha habido un problema al obtene los precios de los juegos", e);
+		}
+
+	}
+
+	public Iterable<Juego> filtrarJuegosEntreDosPrecios(Integer min, Integer max) {
 		try (Connection con = dataSource.getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_SELECT_PRICES);) {
 
@@ -334,7 +402,7 @@ public class JuegosDaoMySql implements Dao<Juego> {
 				Juego juego = null;
 				Mecanica mecanica = null;
 
-				if (rs.next()) {
+				while (rs.next()) {
 
 					mecanica = new Mecanica(rs.getLong("m.id"), rs.getString("m.nombre"),
 							rs.getString("m.descripcion"));
