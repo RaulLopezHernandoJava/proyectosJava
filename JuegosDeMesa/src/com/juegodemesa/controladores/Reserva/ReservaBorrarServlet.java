@@ -29,7 +29,7 @@ public class ReservaBorrarServlet extends HttpServlet {
 		String alertaMensaje, alertaTipo;
 		
 		try {
-			Configuracion.daoReserva.borrarReserva(idReserva);
+			Configuracion.reservaLogica.borrarReserva(idReserva);
 			
 			alertaMensaje = "Reserva" + idReserva + " borrada correctamente";
 			alertaTipo = "success";

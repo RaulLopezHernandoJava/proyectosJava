@@ -46,7 +46,7 @@ public class ReservaServlet extends HttpServlet {
 			
 			// Obtenemos juego y Usuario
 			Long id = Long.parseLong(idJuego);
-			Juego juego = Configuracion.dao.obtenerPorId(id);
+			Juego juego = Configuracion.juegoLogica.obtenerPorId(id);
 			Usuario usuario = UsuariosDaoMySql.getInstancia().obtenerPorEmail(emailUser);
 			
 			
@@ -55,7 +55,7 @@ public class ReservaServlet extends HttpServlet {
 			try {
 				if (juego.getId() != null) {
 					
-					Configuracion.daoReserva.insertarReserva(usuario,juego,copia);
+					Configuracion.reservaLogica.insertarReserva(usuario,juego,copia);
 
 		   }
 

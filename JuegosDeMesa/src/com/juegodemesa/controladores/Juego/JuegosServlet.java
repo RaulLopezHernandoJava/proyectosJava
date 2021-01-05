@@ -17,7 +17,7 @@ public class JuegosServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setAttribute("juegos", Configuracion.dao.obtenerTodos());
+		request.setAttribute("juegos", Configuracion.juegoLogica.listarJuegos());
 		request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
 	}
 
@@ -32,21 +32,21 @@ public class JuegosServlet extends HttpServlet {
 
 		if (autor != null && autor.trim().length() > 0) {
 
-			request.setAttribute("juegos", Configuracion.dao.filtrarJuegosAutor(autor));
+			request.setAttribute("juegos", Configuracion.juegoFiltro.filtrarJuegosAutor(autor));
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp");
 			requestDispatcher.forward(request, response);
 
 		}
 
 		if (editorial != null && editorial.trim().length() > 0) {
-			request.setAttribute("juegos", Configuracion.dao.filtrarJuegosEditorial(editorial));
+			request.setAttribute("juegos", Configuracion.juegoFiltro.filtrarJuegosEditorial(editorial));
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp");
 			requestDispatcher.forward(request, response);
 
 		}
 
 		if (mecanica != null && mecanica.trim().length() > 0) {
-			request.setAttribute("juegos", Configuracion.dao.filtrarJuegosMecanica(mecanica));
+			request.setAttribute("juegos", Configuracion.juegoFiltro.filtrarJuegosMecanica(mecanica));
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp");
 			requestDispatcher.forward(request, response);
 		}
@@ -55,7 +55,7 @@ public class JuegosServlet extends HttpServlet {
 
 
 			Integer min = Integer.parseInt(precioMinimo);
-			request.setAttribute("juegos", Configuracion.dao.filtrarJuegosPrecioMinimo(min));
+			request.setAttribute("juegos", Configuracion.juegoFiltro.filtrarJuegosPrecioMinimo(min));
 			request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
 
 		}
@@ -63,7 +63,7 @@ public class JuegosServlet extends HttpServlet {
 		if (precioMinimo == "" && precioMaximo != null) {
 
 			Integer max = Integer.parseInt(precioMaximo);
-			request.setAttribute("juegos", Configuracion.dao.filtrarJuegosPrecioMaximo(max));
+			request.setAttribute("juegos", Configuracion.juegoFiltro.filtrarJuegosPrecioMaximo(max));
 			request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
 
 		}
@@ -72,7 +72,7 @@ public class JuegosServlet extends HttpServlet {
 
 			Integer min = Integer.parseInt(precioMinimo);
 			Integer max = Integer.parseInt(precioMaximo);
-			request.setAttribute("juegos", Configuracion.dao.filtrarJuegosEntreDosPrecios(min, max));
+			request.setAttribute("juegos", Configuracion.juegoFiltro.filtrarJuegosEntreDosPrecios(min, max));
 			request.getRequestDispatcher("/WEB-INF/vistas/admin/juegos.jsp").forward(request, response);
 
 		}

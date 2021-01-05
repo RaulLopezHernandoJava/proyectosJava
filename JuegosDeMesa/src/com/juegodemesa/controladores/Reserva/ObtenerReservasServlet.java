@@ -21,12 +21,12 @@ public class ObtenerReservasServlet extends HttpServlet {
 		String emailUser = request.getSession().getAttribute("email").toString();
 		
 		if(emailUser == "raullopezhernando@gmail.com") {
-		request.setAttribute("reservas", Configuracion.daoReserva.obtenerTodos());
+		request.setAttribute("reservas", Configuracion.reservaLogica.obtenerTodos());
 		request.getRequestDispatcher("/WEB-INF/vistas/usuario/carrito.jsp").forward(request, response);
 		}
 		
 		if(emailUser != "raullopezhernando@gmail.com") {
-			request.setAttribute("reservas", Configuracion.daoReserva.obtenerReservasPorEmail(emailUser));
+			request.setAttribute("reservas", Configuracion.reservaLogica.obtenerReservasPorEmail(emailUser));
 			request.getRequestDispatcher("/WEB-INF/vistas/usuario/carrito.jsp").forward(request, response);
 		}
 	}

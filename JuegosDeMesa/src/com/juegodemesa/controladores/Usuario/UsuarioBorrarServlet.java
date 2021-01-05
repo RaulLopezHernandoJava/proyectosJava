@@ -14,33 +14,35 @@ import com.juegodemesa.controladores.Configuracion;
 @WebServlet("/admin/borrarUsuario")
 public class UsuarioBorrarServlet {
 	private static final long serialVersionUID = 1L;
-    
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String sId = request.getParameter("id");
-		
+
 		Long id = Long.parseLong(sId);
-		
+
 		String alertaMensaje, alertaTipo;
-		
+
 		try {
-			Configuracion.dao.borrar(id);
-			
+			Configuracion.usuarioLogica.borrar(id);
+
 			alertaMensaje = "Registro " + id + " borrado correctamente";
 			alertaTipo = "success";
 		} catch (AccesoDatosException e) {
 			alertaMensaje = "El registro a borrar no existe";
 			alertaTipo = "warning";
 		}
-		
+
 		HttpSession session = request.getSession();
-		
+
 		session.setAttribute("alertatipo", alertaTipo);
 		session.setAttribute("alertamensaje", alertaMensaje);
-		
+
 		response.sendRedirect(request.getContextPath() + "/admin/listadoUsuarios");
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
 	}
 }

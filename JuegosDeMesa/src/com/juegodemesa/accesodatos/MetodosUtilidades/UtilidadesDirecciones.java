@@ -38,12 +38,11 @@ public class UtilidadesDirecciones {
 
 		Boolean active = Boolean.parseBoolean(activeString);
 
-		Usuario usuario = Configuracion.daoUsuario.obtenerPorEmail(email);
-		System.out.println(usuario);
+		Usuario usuario = Configuracion.usuarioLogica.obtenerPorEmail(email);
 		Long idUsuario = usuario.getId();
-		Provincia provincia = Configuracion.daoDireccion.obtenerProvinciaPorNombre(stringProvincia);
+		Provincia provincia = Configuracion.direccionLogica.obtenerProvinciaPorNombre(stringProvincia);
 
-		ComunidadAutonoma comunidad = Configuracion.daoDireccion.obtenerComunidadAutonomaPorNombre(stringComunidad);
+		ComunidadAutonoma comunidad = Configuracion.direccionLogica.obtenerComunidadAutonomaPorNombre(stringComunidad);
 
 		Direccion direccionUsuario = new Direccion(id, nombre, apellidos, direccion, codigoPostal, ciudad, telefono,
 				email, idUsuario, provincia, comunidad, active);

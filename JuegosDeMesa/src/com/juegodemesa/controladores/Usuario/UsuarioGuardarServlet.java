@@ -18,9 +18,6 @@ import com.juegodemesa.controladores.Configuracion;
 import com.juegodemesa.modelos.Rol;
 import com.juegodemesa.modelos.Usuario;
 
-/**
- * Servlet implementation class UsuarioGuardarServlet
- */
 @WebServlet("/user/guardar")
 public class UsuarioGuardarServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -39,11 +36,11 @@ public class UsuarioGuardarServlet extends HttpServlet {
 		try {
 			if (usuario.getId() == null) {
 				op = "inserción";
-				Configuracion.daoUsuario.insertar(usuario);
+				Configuracion.usuarioLogica.insertar(usuario);
 
 			} else {
 				op = "modificación";
-				Configuracion.daoUsuario.modificar(usuario);
+				Configuracion.usuarioLogica.modificar(usuario);
 			}
 
 			alertaMensaje = "La " + op + " se ha hecho correctamente";
@@ -64,8 +61,6 @@ public class UsuarioGuardarServlet extends HttpServlet {
 		response.sendRedirect(request.getContextPath() + "/admin/listadoUsuarios");
 	}
 
-
-
 	public Usuario FormularioUsuario(HttpServletRequest request) {
 		// 1. Recepción de parámetros
 		String nombre = request.getParameter("nombre");
@@ -83,7 +78,6 @@ public class UsuarioGuardarServlet extends HttpServlet {
 		// Rol rolUsuario = new Rol(2L, null, null);
 
 		Usuario usuario = new Usuario(nombre, apellidos, email, passwordEncriptado, rolUsuario, edad, fechaRegistro);
-		System.out.println(usuario);
 		return usuario;
 	}
 

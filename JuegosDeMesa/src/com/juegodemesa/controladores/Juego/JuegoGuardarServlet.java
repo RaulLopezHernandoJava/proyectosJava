@@ -55,23 +55,20 @@ public class JuegoGuardarServlet extends HttpServlet {
 		try {
 			if (juego.getId() == null) {
 				op = "inserción";
-				Configuracion.dao.insertar(juego);
+				Configuracion.juegoLogica.anadirJuego(juego);
 
 			} else {
 				op = "modificación";
-				Configuracion.dao.modificar(juego);
+				Configuracion.juegoLogica.editarJuego(juego);
+				;
 			}
 
 			mensaje.setTextoMensaje("La" + op + "se ha realizado correctamente");
 			mensaje.setTipoMensaje("success");
-			// alertaMensaje = "La " + op + " se ha hecho correctamente";
-			// alertaTipo = "success";
 
 		} catch (AccesoDatosException e) {
 			mensaje.setTextoMensaje("Ha habido un error en la " + op);
 			mensaje.setTipoMensaje("danger");
-			// alertaMensaje = "Ha habido un error en la " + op + ": " + e.getMessage();
-			// alertaTipo = "danger";
 			e.printStackTrace();
 		}
 
@@ -84,7 +81,5 @@ public class JuegoGuardarServlet extends HttpServlet {
 		// 6.. Redireccionar a la siguiente pantalla
 		response.sendRedirect(request.getContextPath() + "/admin/listado");
 	}
-
-
 
 }

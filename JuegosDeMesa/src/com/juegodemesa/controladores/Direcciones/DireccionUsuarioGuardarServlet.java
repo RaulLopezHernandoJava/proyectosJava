@@ -33,11 +33,11 @@ public class DireccionUsuarioGuardarServlet extends HttpServlet {
 		try {
 			if (direccionUsuario.getId() == null) {
 				op = "inserción";
-				Configuracion.daoDireccion.insertar(direccionUsuario);
+				Configuracion.direccionLogica.insertar(direccionUsuario);
 
 			} else {
 				op = "modificación";
-				Configuracion.daoDireccion.modificar(direccionUsuario);
+				Configuracion.direccionLogica.modificar(direccionUsuario);
 			}
 
 			alertaMensaje = "La " + op + " se ha hecho correctamente";

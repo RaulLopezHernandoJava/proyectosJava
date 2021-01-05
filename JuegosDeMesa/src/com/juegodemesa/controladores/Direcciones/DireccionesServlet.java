@@ -18,7 +18,7 @@ public class DireccionesServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("direcciones", Configuracion.daoDireccion.obtenerTodos());
+		request.setAttribute("direcciones", Configuracion.direccionLogica.obtenerTodos());
 		request.getRequestDispatcher("/WEB-INF/vistas/admin/direcciones.jsp").forward(request, response);
 
 	}
